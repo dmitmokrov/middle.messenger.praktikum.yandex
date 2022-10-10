@@ -1,0 +1,19 @@
+{{#>base title="Авторизация"}}
+  <div class="base-container">
+    {{#>title tag="h1"}}Авторизация{{/title}}
+    {{#>form-container}}
+      <div class="base-row">
+        {{>form-field label="Логин" id="login" name="login" type="text" placeholder="Cool_man"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Пароль" id="password" name="password" type="password" placeholder="Secret_word"}}
+      </div>
+      <div class="base-row">
+        {{>button text="Войти" tag="a" href="/"}}
+      </div>
+      <div class="base-row">
+        {{>button text="Зарегистрироваться" tag="a" href="./registration.hbs" type="secondary" }}
+      </div>
+    {{/form-container}}
+  </div>
+{{/base}}

@@ -1,0 +1,34 @@
+{{#>base title="Регистрация"}}
+  <div class="base-container">
+    {{#>title tag="h1"}}Регистрация{{/title}}
+    {{#>form-container}}
+      <div class="base-row">
+        {{>form-field label="Имя" id="first_name" name="first_name" type="text" placeholder="Александр" }}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Фамилия" id="second_name" name="second_name" type="text" placeholder="Невский"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Логин" id="login" name="login" type="text" placeholder="Cool_man"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Почта" id="email" name="email" type="email" placeholder="cool_man@mail.ru"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Телефон" id="phone" name="phone" type="tel" placeholder="8(123)456-78-90"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Пароль" id="password" name="password" type="password" placeholder="Secret_word"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Пароль еще раз" id="password-repeat" name="password-repeat" type="password" placeholder="Secret_word"}}
+      </div>
+      <div class="base-row">
+        {{>button text="Зарегистрироваться" tag="a" href="/"}}
+      </div>
+      <div class="base-row">
+        {{>button text="Войти" tag="a" href="./authorization.hbs" type="secondary"}}
+      </div>
+    {{/form-container}}
+  </div>
+{{/base}}

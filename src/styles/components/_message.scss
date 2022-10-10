@@ -1,0 +1,11 @@
+.message {
+  max-width: 500px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  background-color: rgba($primary, 0.2);
+
+  &--opponent {
+    margin-left: auto;
+    background-color: rgba($primary, 0.4);
+  }
+}

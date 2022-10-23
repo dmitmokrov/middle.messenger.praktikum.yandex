@@ -1,0 +1,31 @@
+{{#>base title="Изменение данных"}}
+  <div class="base-container">
+    {{#>title tag="h1"}}Изменение данных{{/title}}
+    {{#>form-container}}
+      <div class="base-row">
+        {{>form-avatar label="Изменить аватар" id="avatar" name="avatar"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Имя" id="first_name" name="first_name" type="text" placeholder="Александр"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Фамилия" id="second_name" name="second_name" type="text" placeholder="Невский"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Логин" id="login" name="login" type="text" placeholder="Cool_man"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Имя в чате" id="display_name" name="display_name" type="text" placeholder="Cool_man"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Почта" id="email" name="email" type="email" placeholder="cool_man@mail.ru"}}
+      </div>
+      <div class="base-row">
+        {{>form-field label="Телефон" id="phone" name="phone" type="tel" placeholder="8(123)456-78-90"}}
+      </div>
+      <div class="base-row">
+        {{>button text="Сохранить" type="submit"}}
+      </div>
+    {{/form-container}}
+  </div>
+{{/base}}

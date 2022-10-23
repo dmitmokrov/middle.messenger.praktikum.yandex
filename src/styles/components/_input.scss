@@ -18,4 +18,8 @@
     box-shadow: 0 0 2px #95A3EE;
     cursor: default;
   }
+
+  &:focus {
+    outline: $black solid 2px;
+  }
 }

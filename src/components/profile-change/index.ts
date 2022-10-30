@@ -7,6 +7,7 @@ import Button from '../button';
 import FormField from '../form-field';
 import Input from '../input';
 import Avatar from '../avatar';
+import {getFormData} from '../../utils/getFormData';
 
 class ProfileChange extends Component {
   constructor(props) {
@@ -15,6 +16,13 @@ class ProfileChange extends Component {
     };
 
     super('div', {...props, attrs});
+  }
+
+  componentDidMount() {
+    const form = this.getContent().querySelector('form');
+    if (form) {
+      getFormData(form);
+    }
   }
 
   render() {

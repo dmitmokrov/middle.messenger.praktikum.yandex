@@ -8,6 +8,7 @@ import FormField from '../form-field';
 import Input from '../input';
 import Avatar from '../avatar';
 import {getFormData} from '../../utils/getFormData';
+import {validateForm} from '../../utils/validate';
 
 class ProfileChange extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class ProfileChange extends Component {
     const form = this.getContent().querySelector('form');
     if (form) {
       getFormData(form);
+      validateForm(form);
     }
   }
 

@@ -10,6 +10,14 @@
   box-shadow: inset 0 0 0 1px $black, 4px 4px 2px $primary;
   outline: none;
 
+  &--valid {
+    background-color: $success;
+  }
+
+  &--invalid {
+    background-color: $error;
+  }
+
   &::placeholder {
     color: $placeholder-color;
   }

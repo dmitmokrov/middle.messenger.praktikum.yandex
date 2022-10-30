@@ -5,6 +5,8 @@ import Input from '../input';
 import Avatar from '../avatar';
 import ChatCard from '../chat-card';
 import Message from '../message';
+import {getFormData} from '../../utils/getFormData';
+import {validateForm} from '../../utils/validate';
 
 class Index extends Component {
   constructor(props) {
@@ -13,6 +15,14 @@ class Index extends Component {
     };
 
     super('section', {...props, attrs});
+  }
+
+  componentDidMount() {
+    const form = this.getContent().querySelector('form');
+    if (form) {
+      getFormData(form);
+      validateForm(form);
+    }
   }
 
   render() {

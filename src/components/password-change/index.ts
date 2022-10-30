@@ -6,6 +6,7 @@ import Button from '../button';
 import FormField from '../form-field';
 import Input from '../input';
 import {getFormData} from '../../utils/getFormData';
+import {validateForm} from '../../utils/validate';
 
 class PasswordChange extends Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class PasswordChange extends Component {
     const form = this.getContent().querySelector('form');
     if (form) {
       getFormData(form);
+      validateForm(form);
     }
   }
 

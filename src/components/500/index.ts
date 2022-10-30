@@ -3,9 +3,10 @@ import Component from '../../base/Component';
 import {template} from './template';
 import Title from '../title';
 import Button from '../button';
-import imgSrc from '../../../static/icons/404.svg';
+// @ts-ignore
+import imgSrc from '../../../static/icons/server.svg';
 
-class Page404 extends Component {
+class Page500 extends Component {
   constructor(props) {
     const attrs = {
       class: 'centered-container',
@@ -19,10 +20,10 @@ class Page404 extends Component {
   }
 }
 
-const page404 = new Page404({
+const page500 = new Page500({
   imgSrc,
-  title: new Title({text: 'Такой странички неть :(', attrs: {class: 'title--secondary'}}),
+  title: new Title({text: 'Сервер устал и прилег:( Но мы его скоро разбудим', attrs: {class: 'title--secondary'}}),
   button: new Button({tag: 'a', text: 'Вернуться к чатам', attrs: {href: "/", class: 'button--secondary'}}),
 });
 
-render('.main', page404);
+render('.main', page500);

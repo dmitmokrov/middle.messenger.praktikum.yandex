@@ -1,3 +1,4 @@
+import {template} from './template';
 import Component from "../../base/Component";
 
 class Input extends Component {
@@ -14,7 +15,7 @@ class Input extends Component {
   }
 
   render() {
-    return this.compile('', {});
+    return this.compile(template, {});
   }
 }
 

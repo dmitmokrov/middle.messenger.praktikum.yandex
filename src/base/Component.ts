@@ -2,7 +2,20 @@ import { compile } from 'handlebars';
 import { v4 as makeID } from 'uuid';
 import EventBus from './EventBus';
 
-class Component {
+// type Events = Values<typeof Component.EVENTS>;
+type PropsType = Record<string, unknown>;
+type ChildrenType = Record<string, Component>;
+
+const bus = new EventBus();
+
+abstract class Component {
+  id: string;
+  children: ChildrenType;
+  props: PropsType;
+  #meta: {tagName: string, propsAndChildren: PropsType};
+  #element: HTMLElement;
+  #eventBus: EventBus;
+
   static EVENTS = {
     INIT: 'INIT',
     COMPONENT_DID_MOUNT: 'COMPONENT_DID_MOUNT',
@@ -10,11 +23,7 @@ class Component {
     RENDER: 'RENDER',
   }
 
-  #element = null;
-  #meta = null;
-  #eventBus = null;
-
-  constructor(tagName = 'div', propsAndChildren = {}) {
+  constructor(tagName: string = 'div', propsAndChildren: PropsType = {}) {
     this.#meta = { tagName, propsAndChildren };
     const {children, props} = this.#getChildren(propsAndChildren);
     this.children = children;
@@ -25,45 +34,44 @@ class Component {
     this.#eventBus.emit(Component.EVENTS.INIT);
   }
 
-  init() {
+  init() : void {
     this.#createResources();
     this.#eventBus.emit(Component.EVENTS.RENDER);
   }
 
-  componentDidMount(oldProps) {}
+  componentDidMount() : void {}
 
-  dispatchComponentDidMount() {
+  dispatchComponentDidMount() : void {
     this.#eventBus.emit(Component.EVENTS.COMPONENT_DID_MOUNT);
   }
 
-  componentDidUpdate(oldProps, newProps) {
+  componentDidUpdate(oldProps: PropsType, newProps: PropsType) : boolean {
     return true;
   }
 
-  render() {}
+  abstract render() : DocumentFragment
 
-  compile(template, props) {
+  compile(template: string, props: PropsType) : DocumentFragment {
     const propsAndStubs = {...props};
 
-    console.log('this.children', this.children);
     Object.entries(this.children).forEach(([key, child]) => {
-      console.log(key);
       propsAndStubs[key] = `<div data-id="${child.id}"></div>`;
     });
 
-    const fragment = this.#createDocumentElement('template');
-    console.log(propsAndStubs);
+    const fragment = this.#createDocumentElement('template') as HTMLTemplateElement;
     fragment.innerHTML = compile(template)(propsAndStubs);
 
     Object.values(this.children).forEach(child => {
       const stub = fragment.content.querySelector(`[data-id="${child.id}"]`);
-      stub.replaceWith(child.getContent());
+      if (stub) {
+        stub.replaceWith(child.getContent());
+      }
     });
 
     return fragment.content;
   }
 
-  setProps(newProps) {
+  setProps(newProps) : void {
     if (!newProps) {
       return;
     }
@@ -71,18 +79,18 @@ class Component {
     Object.assign(this.props, newProps);
   }
 
-  getContent() {
+  getContent() : HTMLElement {
     return this.#element;
   }
 
-  #registerEvents(eventBus) {
+  #registerEvents(eventBus: EventBus) {
     eventBus.on(Component.EVENTS.INIT, this.init.bind(this));
     eventBus.on(Component.EVENTS.COMPONENT_DID_MOUNT, this.#componentDidMount.bind(this));
     eventBus.on(Component.EVENTS.COMPONENT_DID_UPDATE, this.#componentDidUpdate.bind(this));
     eventBus.on(Component.EVENTS.RENDER, this.#render.bind(this));
   }
 
-  #componentDidMount() {
+  #componentDidMount() : void {
     this.componentDidMount();
 
     Object.values(this.children).forEach(child => {
@@ -90,7 +98,7 @@ class Component {
     });
   }
 
-  #componentDidUpdate(oldProps, newProps) {
+  #componentDidUpdate(oldProps, newProps) : void {
     const response = this.componentDidUpdate(oldProps, newProps);
     if (!response) {
       return;
@@ -99,7 +107,7 @@ class Component {
     this.#render();
   }
 
-  #render() {
+  #render() : void {
     const component = this.render();
     this.#removeEvents();
     this.#element.innerHTML = '';
@@ -107,31 +115,31 @@ class Component {
     this.#addEvents();
   }
 
-  #addEvents() {
+  #addEvents() : void {
     const events = this.#getEvents();
     events.forEach(event => {
       const eventName = this.#getEventName(event);
-      this.#element.addEventListener(eventName, this.props[event]);
+      this.#element.addEventListener(eventName, this.props[event] as () => void);
     });
   }
 
-  #removeEvents() {
+  #removeEvents() : void {
     const events = this.#getEvents();
     events.forEach(event => {
       const eventName = this.#getEventName(event);
-      this.#element.removeEventListener(eventName, this.props[event]);
+      this.#element.removeEventListener(eventName, this.props[event] as () => void);
     });
   }
 
-  #getEvents() {
+  #getEvents() : string[] {
     return Object.keys(this.props).filter(event => event.startsWith('on'));
   }
 
-  #getEventName(event) {
-    return event.slice(2).toLowerCase();
+  #getEventName(event: string) : keyof HTMLElementEventMap {
+    return event.slice(2).toLowerCase() as keyof HTMLElementEventMap;
   }
 
-  #getChildren(propsAndChildren) {
+  #getChildren(propsAndChildren: PropsType) : {children: ChildrenType, props: PropsType} {
     const children = {};
     const props = {};
 
@@ -146,7 +154,7 @@ class Component {
     return {children, props};
   }
 
-  #createResources() {
+  #createResources() : void {
     const { tagName, propsAndChildren } = this.#meta;
     this.#element = this.#createDocumentElement(tagName);
     const {attrs} = propsAndChildren;
@@ -157,8 +165,9 @@ class Component {
     }
   }
 
-  #createDocumentElement(tagName) {
+  #createDocumentElement(tagName: string) : HTMLElement {
     const element = document.createElement(tagName);
+    //@ts-ignore
     if (this.props?.settings?.withInternalID) {
       element.setAttribute('data-id', this.id);
     }
@@ -170,14 +179,14 @@ class Component {
     return element;
   }
 
-  #makePropsProxy(props) {
+  #makePropsProxy(props: PropsType) {
     const self = this;
     props = new Proxy(props, {
-      get(target, prop) {
+      get(target, prop: string) {
         const value = target[prop];
         return typeof value === 'function' ? value.bind(target) : value;
       },
-      set(target, prop, value) {
+      set(target, prop: string, value) : boolean {
         const oldProps = {...target};
         target[prop] = value;
         const newProps = target;
@@ -189,11 +198,11 @@ class Component {
     return props;
   }
 
-  show() {
+  show() : void {
     this.getContent().style.display = 'block';
   }
 
-  hide() {
+  hide() : void {
     this.getContent().style.display = 'none';
   }
 }

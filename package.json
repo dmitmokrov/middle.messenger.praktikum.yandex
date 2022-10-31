@@ -8,7 +8,8 @@
     "start": "npm run build && node ./server.js",
     "dev": "parcel src/pages/*.html",
     "build": "parcel build src/pages/*.html --no-source-maps",
-    "prebuild": "rm -rf dist"
+    "prebuild": "rm -rf dist",
+    "eslint": "eslint . --fix --ext .js,.ts"
   },
   "repository": {
     "type": "git",
@@ -22,13 +23,20 @@
   },
   "homepage": "https://github.com/dmitmokrov/middle.messenger.praktikum.yandex#readme",
   "devDependencies": {
-    "@anikin/parcel-transformer-handlebars": "1.0.9",
     "@parcel/transformer-sass": "2.7.0",
-    "handlebars": "4.7.7",
-    "parcel": "2.7.0"
+    "@types/uuid": "8.3.4",
+    "@typescript-eslint/eslint-plugin": "5.41.0",
+    "@typescript-eslint/parser": "5.41.0",
+    "eslint": "8.26.0",
+    "eslint-config-airbnb": "19.0.4",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "parcel": "2.7.0",
+    "prettier": "2.7.1"
   },
   "dependencies": {
     "express": "4.18.2",
+    "handlebars": "4.7.7",
     "uuid": "9.0.0"
   },
   "engines": {

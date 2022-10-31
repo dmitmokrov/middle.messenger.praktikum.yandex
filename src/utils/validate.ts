@@ -8,22 +8,29 @@ const INPUT_NAME = {
   MESSAGE: 'message',
 };
 
-const isValueLengthValid = (value: string, min: number, max: number) : boolean => {
-  return value.length >= min && value.length <= max;
-};
+const isValueLengthValid = (value: string, min: number, max: number): boolean =>
+  value.length >= min && value.length <= max;
 
-const validate = (inputName: string, value: string) : boolean => {
-  switch(inputName) {
+const validate = (inputName: string, value: string): boolean => {
+  switch (inputName) {
     case INPUT_NAME.FIRST_NAME:
     case INPUT_NAME.SECOND_NAME:
-      return /^[A-ZА-ЯЁ][a-zA-Zа-яёА-ЯЁ\-]*$/.test(value);
+      return /^[A-ZА-ЯЁ][a-zA-Zа-яёА-ЯЁ-]*$/.test(value);
 
     case INPUT_NAME.LOGIN:
-      return /^[a-zA-Z_\-\d]+$/.test(value) && isValueLengthValid(value, 3, 20) && !(/^\d+$/.test(value));
+      return (
+        /^[a-zA-Z_\-\d]+$/.test(value) &&
+        isValueLengthValid(value, 3, 20) &&
+        !/^\d+$/.test(value)
+      );
     case INPUT_NAME.EMAIL:
       return /^[a-zA-Z_\-.\d]+@[a-zA-Z]+\./.test(value);
     case INPUT_NAME.PASSWORD:
-      return /[A-Z]/.test(value) && /\d/.test(value) && isValueLengthValid(value, 8, 40);
+      return (
+        /[A-Z]/.test(value) &&
+        /\d/.test(value) &&
+        isValueLengthValid(value, 8, 40)
+      );
     case INPUT_NAME.PHONE:
       return /^(\+)?\d+$/.test(value) && isValueLengthValid(value, 10, 15);
     case INPUT_NAME.MESSAGE:
@@ -31,7 +38,7 @@ const validate = (inputName: string, value: string) : boolean => {
     default:
       return true;
   }
-}
+};
 
 const setInputValidity = (input: HTMLInputElement, isValid: boolean) => {
   if (!isValid) {
@@ -43,27 +50,30 @@ const setInputValidity = (input: HTMLInputElement, isValid: boolean) => {
   }
 };
 
-export const validateForm = (form: HTMLFormElement) : void => {
+export const validateForm = (form: HTMLFormElement): void => {
   // Обработчик для формы
-  const onSubmit = (event) => {
+  const onSubmit = (event: Event) => {
     event.preventDefault();
-    const formData =  new FormData(form);
+    const formData = new FormData(form);
     [...formData].forEach(([inputName, value]) => {
       if (typeof value === 'string') {
-        const target = form.querySelector(`[name="${inputName}"]`) as HTMLInputElement;
+        const target = form.querySelector(
+          `[name="${inputName}"]`
+        ) as HTMLInputElement;
         setInputValidity(target, validate(inputName, value));
       }
-    })
+    });
   };
   form.addEventListener('submit', onSubmit);
 
   // Обработчик для инпутов
   const inputs = form?.querySelectorAll('input');
-  const onBlur = ({target}) => {
-    const {name, value} = target;
+  const onBlur = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    const { name, value } = target;
     setInputValidity(target, validate(name, value));
   };
-  inputs?.forEach(input => {
+  inputs?.forEach((input) => {
     input.addEventListener('blur', onBlur);
   });
 };

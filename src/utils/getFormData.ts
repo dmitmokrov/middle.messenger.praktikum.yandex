@@ -1,7 +1,7 @@
-export const getFormData = (form: HTMLFormElement) : void => {
+export const getFormData = (form: HTMLFormElement): void => {
   const onSubmit = (event) => {
     event.preventDefault();
-    const formData =  new FormData(form);
+    const formData = new FormData(form);
     console.log(Object.fromEntries(formData));
   };
 

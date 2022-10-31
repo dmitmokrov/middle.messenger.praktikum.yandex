@@ -1,17 +1,16 @@
-import {template} from './template';
-import Component from "../../base/Component";
+import { template } from './template';
+import Component, { PropsType } from '../../base/Component';
 
 class ChatCard extends Component {
-  constructor(props) {
-    const attrs = Object.assign({}, props?.attrs, {
-      class: 'chat-card',
-    });
+  constructor(props: PropsType) {
+    const attrs = { ...props?.attrs, class: 'chat-card' };
 
-    super('div', {...props, attrs});
+    super('div', { ...props, attrs });
   }
 
   render() {
-    return this.compile(template, {avatar: this.props.avatar});
+    const { avatar } = this.props;
+    return this.compile(template, { avatar });
   }
 }
 

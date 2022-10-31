@@ -1,5 +1,5 @@
-import {template} from './template';
-import Component from "../../base/Component";
+import { template } from './template';
+import Component from '../../base/Component';
 
 class FormAvatar extends Component {
   constructor(props) {
@@ -7,7 +7,7 @@ class FormAvatar extends Component {
       class: 'form-avatar',
     };
 
-    super('div', {...props, attrs});
+    super('div', { ...props, attrs });
   }
 
   render() {

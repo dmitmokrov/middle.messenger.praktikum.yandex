@@ -1,19 +1,23 @@
-import {template} from './template';
-import Component from "../../base/Component";
+import { template } from './template';
+import Component, { PropsType } from '../../base/Component';
+
+type ButtonPropsType = PropsType & { text: string };
 
 class Button extends Component {
-  constructor(props) {
-    const attrs = Object.assign({}, props?.attrs, {
+  constructor(props: ButtonPropsType) {
+    const attrs = {
+      ...props?.attrs,
       class: `button ${props?.attrs?.class}`,
-    });
+    };
 
     const tag = props?.tag || 'button';
 
-    super(tag, {...props, attrs});
+    super(tag, { ...props, attrs });
   }
 
   render() {
-    return this.compile(template, {text: this.props.text});
+    const { text } = this.props;
+    return this.compile(template, { text });
   }
 }
 

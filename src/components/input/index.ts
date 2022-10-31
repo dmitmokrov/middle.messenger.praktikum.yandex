@@ -1,17 +1,15 @@
-import {template} from './template';
-import Component from "../../base/Component";
+import { template } from './template';
+import Component, { PropsType } from '../../base/Component';
 
 class Input extends Component {
-  constructor(props) {
-    const attrs = Object.assign(
-      {},
-      {
-        class: 'input', type: 'text'
-      },
-      props?.attrs
-    );
+  constructor(props: PropsType) {
+    const attrs = {
+      class: 'input',
+      type: 'text',
+      ...props?.attrs,
+    };
 
-    super('input', {...props, attrs});
+    super('input', { ...props, attrs });
   }
 
   render() {

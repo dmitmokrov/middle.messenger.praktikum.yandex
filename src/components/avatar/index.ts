@@ -1,13 +1,14 @@
-import {template} from './template';
-import Component from "../../base/Component";
+import { template } from './template';
+import Component, { PropsType } from '../../base/Component';
 
 class Avatar extends Component {
-  constructor(props) {
-    const attrs = Object.assign({}, props?.attrs, {
+  constructor(props: PropsType) {
+    const attrs = {
+      ...props?.attrs,
       class: `avatar ${props?.attrs?.class}`,
-    });
+    };
 
-    super('div', {...props, attrs});
+    super('div', { ...props, attrs });
   }
 
   render() {

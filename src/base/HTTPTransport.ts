@@ -3,39 +3,49 @@ enum METHOD {
   PUT = 'PUT',
   POST = 'POST',
   DELETE = 'DELETE',
-};
+}
 
 type OptionsType = {
   method: METHOD;
   headers?: Record<string, string>;
-  data?: any;
+  data?: Record<string, unknown>;
   timeout?: number;
 };
 
-const queryStringify = (data: Record<string, unknown>) : string => {
-  const str = Object.entries(data).map(([key, value]) => `${key}=${value}`).join('&');
+const queryStringify = (data: Record<string, unknown>): string => {
+  const str = Object.entries(data)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&');
   return `?${str}`;
 };
 
 class HTTPTransport {
-  get(url: string, options: Omit<OptionsType, 'method'> = {}) : Promise<XMLHttpRequest> {
-    return this.#request(url, {...options, method: METHOD.GET}, options.timeout);
+  get(
+    url: string,
+    options: Omit<OptionsType, 'method'> = {}
+  ): Promise<XMLHttpRequest> {
+    return this.#request(
+      url,
+      { ...options, method: METHOD.GET },
+      options.timeout
+    );
   }
 
-  put = (url, options: Omit<OptionsType, 'method'> = {}) => {
-    return this.#request(url, {...options, method: METHOD.PUT}, options.timeout);
-  };
+  put = (url: string, options: Omit<OptionsType, 'method'> = {}) =>
+    this.#request(url, { ...options, method: METHOD.PUT }, options.timeout);
 
-  post = (url, options: Omit<OptionsType, 'method'> = {}) => {
-    return this.#request(url, {...options, method: METHOD.POST}, options.timeout);
-  };
+  post = (url: string, options: Omit<OptionsType, 'method'> = {}) =>
+    this.#request(url, { ...options, method: METHOD.POST }, options.timeout);
 
-  delete = (url, options: Omit<OptionsType, 'method'> = {}) => {
-    return this.#request(url, {...options, method: METHOD.DELETE}, options.timeout);
-  };
+  delete = (url: string, options: Omit<OptionsType, 'method'> = {}) =>
+    this.#request(url, { ...options, method: METHOD.DELETE }, options.timeout);
 
-  #request(url: string, options: OptionsType = {method: METHOD.GET}, timeout: number = 5000) : Promise<XMLHttpRequest> {
-    const {method, headers = {}, data} = options;
+  #request(
+    url: string,
+    options: OptionsType = { method: METHOD.GET },
+    timeout: number = 5000
+  ): Promise<XMLHttpRequest> {
+    const { method, headers = {}, data } = options;
 
     return new Promise((resolve, reject) => {
       if (method === METHOD.GET && data) {
@@ -50,7 +60,7 @@ class HTTPTransport {
         xhr.setRequestHeader(key, value);
       });
 
-      xhr.onload = function() {
+      xhr.onload = function () {
         resolve(xhr);
       };
 
@@ -61,12 +71,10 @@ class HTTPTransport {
       if (method === METHOD.GET) {
         xhr.send();
       } else {
-        xhr.send(data);
+        xhr.send(JSON.stringify(data));
       }
     });
   }
 }
 
 export default HTTPTransport;
-
-

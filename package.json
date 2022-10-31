@@ -9,7 +9,8 @@
     "dev": "parcel src/pages/*.html",
     "build": "parcel build src/pages/*.html --no-source-maps",
     "prebuild": "rm -rf dist",
-    "eslint": "eslint . --fix --ext .js,.ts"
+    "eslint": "eslint . --fix --ext .js,.ts",
+    "stylelint": "stylelint \"**/*.scss\" --fix"
   },
   "repository": {
     "type": "git",
@@ -32,7 +33,10 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
     "parcel": "2.7.0",
-    "prettier": "2.7.1"
+    "prettier": "2.7.1",
+    "stylelint": "14.14.0",
+    "stylelint-config-prettier-scss": "0.0.1",
+    "stylelint-config-standard-scss": "6.0.0"
   },
   "dependencies": {
     "express": "4.18.2",

@@ -51,10 +51,10 @@ abstract class Component {
   }
 
   componentDidUpdate(oldProps: PropsType, newProps: PropsType): boolean {
-    if (oldProps === newProps) {
-      return false;
-    }
-    return true;
+    return !Object.entries(oldProps).every(
+      ([key, value]) =>
+        newProps[key] && JSON.stringify(newProps[key]) === JSON.stringify(value)
+    );
   }
 
   abstract render(): DocumentFragment;

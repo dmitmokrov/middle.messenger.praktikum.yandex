@@ -22,16 +22,12 @@
     color: $placeholder-color;
   }
 
-  &:read-only {
+  &:disabled {
     box-shadow: 0 0 2px #95A3EE;
     cursor: default;
   }
 
   &:focus {
     outline: $black solid 2px;
-
-    &:read-only {
-      outline: none;
-    }
   }
 }

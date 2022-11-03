@@ -12,6 +12,11 @@ type OptionsType = {
   timeout?: number;
 };
 
+type HTTPMethod = (
+  url: string,
+  options: Omit<OptionsType, 'method'>
+) => Promise<XMLHttpRequest>;
+
 const queryStringify = (data: Record<string, unknown>): string => {
   const str = Object.entries(data)
     .map(([key, value]) => `${key}=${value}`)
@@ -20,24 +25,25 @@ const queryStringify = (data: Record<string, unknown>): string => {
 };
 
 class HTTPTransport {
-  get(
-    url: string,
-    options: Omit<OptionsType, 'method'> = {}
-  ): Promise<XMLHttpRequest> {
+  get: HTTPMethod = (url, options = {}) => {
+    const { data } = options;
+    if (data) {
+      url += queryStringify(data);
+    }
     return this.#request(
       url,
       { ...options, method: METHOD.GET },
       options.timeout
     );
-  }
+  };
 
-  put = (url: string, options: Omit<OptionsType, 'method'> = {}) =>
+  put: HTTPMethod = (url, options = {}) =>
     this.#request(url, { ...options, method: METHOD.PUT }, options.timeout);
 
-  post = (url: string, options: Omit<OptionsType, 'method'> = {}) =>
+  post: HTTPMethod = (url, options = {}) =>
     this.#request(url, { ...options, method: METHOD.POST }, options.timeout);
 
-  delete = (url: string, options: Omit<OptionsType, 'method'> = {}) =>
+  delete: HTTPMethod = (url, options = {}) =>
     this.#request(url, { ...options, method: METHOD.DELETE }, options.timeout);
 
   #request(
@@ -48,10 +54,6 @@ class HTTPTransport {
     const { method, headers = {}, data } = options;
 
     return new Promise((resolve, reject) => {
-      if (method === METHOD.GET && data) {
-        url += queryStringify(data);
-      }
-
       const xhr = new XMLHttpRequest();
       xhr.open(method, url);
       xhr.timeout = timeout;

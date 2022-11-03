@@ -6,7 +6,7 @@ export type PropsType = Record<string, unknown> & {
   attrs?: { [key: string]: any };
   tag?: string;
 };
-type ChildrenType = Record<string, Component>;
+type ChildrenType = Record<string, Component | Component[]>;
 
 abstract class Component {
   id: string;
@@ -63,7 +63,13 @@ abstract class Component {
     const propsAndStubs = { ...props };
 
     Object.entries(this.children).forEach(([key, child]) => {
-      propsAndStubs[key] = `<div data-id="${child.id}"></div>`;
+      if (Array.isArray(child)) {
+        propsAndStubs[key] = child.map(
+          (item) => `<div data-id="${item.id}"></div>`
+        );
+      } else {
+        propsAndStubs[key] = `<div data-id="${child.id}"></div>`;
+      }
     });
 
     const fragment = this.#createDocumentElement(
@@ -71,12 +77,14 @@ abstract class Component {
     ) as HTMLTemplateElement;
     fragment.innerHTML = compile(template)(propsAndStubs);
 
-    Object.values(this.children).forEach((child) => {
-      const stub = fragment.content.querySelector(`[data-id="${child.id}"]`);
-      if (stub) {
-        stub.replaceWith(child.getContent());
-      }
-    });
+    Object.values(this.children)
+      .flat()
+      .forEach((child: Component) => {
+        const stub = fragment.content.querySelector(`[data-id="${child.id}"]`);
+        if (stub) {
+          stub.replaceWith(child.getContent());
+        }
+      });
 
     return fragment.content;
   }
@@ -110,7 +118,13 @@ abstract class Component {
     this.componentDidMount();
 
     Object.values(this.children).forEach((child) => {
-      child.dispatchComponentDidMount();
+      if (Array.isArray(child)) {
+        child.forEach((item) => {
+          item.dispatchComponentDidMount();
+        });
+      } else {
+        child.dispatchComponentDidMount();
+      }
     });
   }
 
@@ -169,7 +183,11 @@ abstract class Component {
     const props: PropsType = {};
 
     Object.entries(propsAndChildren).forEach(([key, value]) => {
-      if (value instanceof Component) {
+      if (
+        value instanceof Component ||
+        (Array.isArray(value) &&
+          value.every((item) => item instanceof Component))
+      ) {
         children[key] = value;
       } else {
         props[key] = value;
@@ -211,7 +229,7 @@ abstract class Component {
         const value = target[prop];
         return typeof value === 'function' ? value.bind(target) : value;
       },
-      set(target, prop: string, value): boolean {
+      set(target, prop: string, value: unknown): boolean {
         const oldProps = { ...target };
         target[prop] = value;
         const newProps = target;

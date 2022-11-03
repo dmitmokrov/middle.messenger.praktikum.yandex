@@ -4,6 +4,10 @@ const INPUT_NAME = {
   LOGIN: 'login',
   EMAIL: 'email',
   PASSWORD: 'password',
+  PASSWORD_REPEAT: 'password-repeat',
+  OLD_PASSWORD: 'oldPassword',
+  NEW_PASSWORD: 'newPassword',
+  NEW_PASSWORD_REPEAT: 'newPasswordRepeat',
   PHONE: 'phone',
   MESSAGE: 'message',
 };
@@ -11,33 +15,88 @@ const INPUT_NAME = {
 const isValueLengthValid = (value: string, min: number, max: number): boolean =>
   value.length >= min && value.length <= max;
 
-const validate = (inputName: string, value: string): boolean => {
+const validate = (inputName: string, value: string): string => {
+  let error = '';
+
   switch (inputName) {
     case INPUT_NAME.FIRST_NAME:
     case INPUT_NAME.SECOND_NAME:
-      return /^[A-ZА-ЯЁ][a-zA-Zа-яёА-ЯЁ-]*$/.test(value);
+      if (!/[A-ZА-ЯЁ]/.test(value[0])) {
+        error = 'Первая буква должна быть заглавной';
+        break;
+      }
+
+      if (!/^[a-zA-Zа-яёА-ЯЁ-]*$/.test(value.slice(1))) {
+        error = 'Разрешены только буквы или символ "-"';
+      }
+
+      break;
 
     case INPUT_NAME.LOGIN:
-      return (
-        /^[a-zA-Z_\-\d]+$/.test(value) &&
-        isValueLengthValid(value, 3, 20) &&
-        !/^\d+$/.test(value)
-      );
+      if (!/^[a-zA-Z_\-\d]+$/.test(value)) {
+        error =
+          'Логин может состоять из латинских букв, цифр и символов "_" и "-"';
+        break;
+      }
+
+      if (!isValueLengthValid(value, 3, 20)) {
+        error = 'Логин должен содержать не менее 3 и не более 20 символов';
+        break;
+      }
+
+      if (/^\d+$/.test(value)) {
+        error = 'Логин не может состоять из одних цифр';
+      }
+
+      break;
+
     case INPUT_NAME.EMAIL:
-      return /^[a-zA-Z_\-.\d]+@[a-zA-Z]+\./.test(value);
+      if (!/^[a-zA-Z_\-.\d]+@[a-zA-Z]+\./.test(value)) {
+        error = 'Неверный формат электронной почты';
+      }
+
+      break;
     case INPUT_NAME.PASSWORD:
-      return (
-        /[A-Z]/.test(value) &&
-        /\d/.test(value) &&
-        isValueLengthValid(value, 8, 40)
-      );
+    case INPUT_NAME.PASSWORD_REPEAT:
+    case INPUT_NAME.OLD_PASSWORD:
+    case INPUT_NAME.NEW_PASSWORD:
+    case INPUT_NAME.NEW_PASSWORD_REPEAT:
+      if (!isValueLengthValid(value, 8, 40)) {
+        error = 'Пароль должен содержать не менее 8 и не более 40 символов';
+        break;
+      }
+
+      if (!/[A-ZА-ЯЁ]/.test(value)) {
+        error = 'Пароль должен содержать хотя бы одну заглавную букву';
+        break;
+      }
+
+      if (!/\d/.test(value)) {
+        error = 'Пароль должен содержать хотя бы одну цифру';
+      }
+
+      break;
     case INPUT_NAME.PHONE:
-      return /^(\+)?\d+$/.test(value) && isValueLengthValid(value, 10, 15);
+      if (!/^(\+)?\d+$/.test(value)) {
+        error = 'Телефон должен состоять из цифр';
+        break;
+      }
+
+      if (!isValueLengthValid(value, 10, 15)) {
+        error = 'Телефон должен содержать не менее 10 и не более 15 символов';
+      }
+
+      break;
     case INPUT_NAME.MESSAGE:
-      return value.length > 0;
+      if (value.length === 0) {
+        error = 'Сообщение не может быть пустым';
+      }
+
+      break;
     default:
-      return true;
   }
+
+  return error;
 };
 
 const setInputValidity = (input: HTMLInputElement, isValid: boolean) => {
@@ -50,30 +109,40 @@ const setInputValidity = (input: HTMLInputElement, isValid: boolean) => {
   }
 };
 
-export const validateForm = (form: HTMLFormElement): void => {
-  // Обработчик для формы
-  const onSubmit = (event: Event) => {
-    event.preventDefault();
-    const formData = new FormData(form);
-    [...formData].forEach(([inputName, value]) => {
-      if (typeof value === 'string') {
-        const target = form.querySelector(
-          `[name="${inputName}"]`
-        ) as HTMLInputElement;
-        setInputValidity(target, validate(inputName, value));
-      }
-    });
-  };
-  form.addEventListener('submit', onSubmit);
+const setError = (node: HTMLSpanElement, error: string) => {
+  if (error) {
+    node.textContent = error;
+  } else {
+    node.textContent = '';
+  }
+};
 
-  // Обработчик для инпутов
-  const inputs = form?.querySelectorAll('input');
-  const onBlur = (event: Event) => {
-    const target = event.target as HTMLInputElement;
-    const { name, value } = target;
-    setInputValidity(target, validate(name, value));
-  };
-  inputs?.forEach((input) => {
-    input.addEventListener('blur', onBlur);
+export const onSubmit = (event: Event) => {
+  event.preventDefault();
+  const form = event.target as HTMLFormElement;
+  const formData = new FormData(form);
+  [...formData].forEach(([inputName, value]) => {
+    if (typeof value === 'string') {
+      const target = form.querySelector(
+        `[name="${inputName}"]`
+      ) as HTMLInputElement;
+      const error = validate(inputName, value);
+      const errorField = target.nextElementSibling as HTMLSpanElement;
+      if (errorField) {
+        setError(errorField, error);
+      }
+      setInputValidity(target, !error);
+    }
   });
+};
+
+export const onBlur = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const { name, value } = target;
+  const error = validate(name, value);
+  const errorField = target.nextElementSibling as HTMLSpanElement;
+  if (errorField) {
+    setError(errorField, error);
+  }
+  setInputValidity(target, !error);
 };

@@ -1,4 +1,3 @@
-import { render } from '../../utils/render';
 import Component, { PropsType } from '../../base/Component';
 import { template } from './template';
 import Title from '../title';
@@ -8,28 +7,7 @@ import Input from '../input';
 import FormContainer from '../form-container';
 import { getFormData } from '../../utils/getFormData';
 
-class PasswordChange extends Component {
-  constructor(props: PropsType) {
-    const attrs = {
-      class: 'base-container',
-    };
-
-    super('div', { ...props, attrs });
-  }
-
-  componentDidMount() {
-    const form = this.getContent().querySelector('form');
-    if (form) {
-      getFormData(form);
-    }
-  }
-
-  render() {
-    return this.compile(template, this.props);
-  }
-}
-
-const passwordChange = new PasswordChange({
+const initialProps = {
   title: new Title({ text: 'Изменение пароля' }),
   formContainer: new FormContainer({
     formElements: [
@@ -75,6 +53,27 @@ const passwordChange = new PasswordChange({
       new Button({ text: 'Сохранить', attrs: { type: 'submit' } }),
     ],
   }),
-});
+};
 
-render('.main', passwordChange);
+class PasswordChangePage extends Component {
+  constructor(props: PropsType) {
+    const attrs = {
+      class: 'base-container',
+    };
+
+    super('div', { ...props, ...initialProps, attrs });
+  }
+
+  componentDidMount() {
+    const form = this.getContent().querySelector('form');
+    if (form) {
+      getFormData(form);
+    }
+  }
+
+  render() {
+    return this.compile(template, this.props);
+  }
+}
+
+export default PasswordChangePage;

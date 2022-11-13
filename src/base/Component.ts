@@ -19,6 +19,8 @@ abstract class Component {
 
   #element: HTMLElement;
 
+  #elementHidden: Text;
+
   #eventBus: EventBus;
 
   static EVENTS = {
@@ -37,6 +39,7 @@ abstract class Component {
     this.#eventBus = new EventBus();
     this.#registerEvents(this.#eventBus);
     this.#eventBus.emit(Component.EVENTS.INIT);
+    this.#elementHidden = document.createTextNode('');
   }
 
   init(): void {
@@ -246,11 +249,11 @@ abstract class Component {
   }
 
   show(): void {
-    this.getContent().style.display = 'block';
+    this.#elementHidden.replaceWith(this.getContent());
   }
 
   hide(): void {
-    this.getContent().style.display = 'none';
+    this.getContent().replaceWith(this.#elementHidden);
   }
 }
 

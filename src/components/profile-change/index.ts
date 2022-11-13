@@ -1,4 +1,3 @@
-import { render } from '../../utils/render';
 import Component, { PropsType } from '../../base/Component';
 import { template } from './template';
 import Title from '../title';
@@ -10,28 +9,7 @@ import Avatar from '../avatar';
 import FormContainer from '../form-container';
 import { getFormData } from '../../utils/getFormData';
 
-class ProfileChange extends Component {
-  constructor(props: PropsType) {
-    const attrs = {
-      class: 'base-container',
-    };
-
-    super('div', { ...props, attrs });
-  }
-
-  componentDidMount() {
-    const form = this.getContent().querySelector('form');
-    if (form) {
-      getFormData(form);
-    }
-  }
-
-  render() {
-    return this.compile(template, this.props);
-  }
-}
-
-const profileChange = new ProfileChange({
+const initialProps = {
   title: new Title({ text: 'Изменение данных' }),
   formContainer: new FormContainer({
     formElements: [
@@ -110,6 +88,27 @@ const profileChange = new ProfileChange({
       new Button({ text: 'Сохранить', attrs: { type: 'submit' } }),
     ],
   }),
-});
+};
 
-render('.main', profileChange);
+class ProfileChangePage extends Component {
+  constructor(props: PropsType) {
+    const attrs = {
+      class: 'base-container',
+    };
+
+    super('div', { ...props, ...initialProps, attrs });
+  }
+
+  componentDidMount() {
+    const form = this.getContent().querySelector('form');
+    if (form) {
+      getFormData(form);
+    }
+  }
+
+  render() {
+    return this.compile(template, this.props);
+  }
+}
+
+export default ProfileChangePage;

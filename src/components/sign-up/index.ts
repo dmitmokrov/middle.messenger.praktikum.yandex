@@ -1,4 +1,3 @@
-import { render } from '../../utils/render';
 import Component, { PropsType } from '../../base/Component';
 import { template } from './template';
 import Title from '../title';
@@ -7,29 +6,10 @@ import FormField from '../form-field';
 import Input from '../input';
 import FormContainer from '../form-container';
 import { getFormData } from '../../utils/getFormData';
+import { goTo } from '../../base/Router';
+import { Url } from '../../utils/Url';
 
-class Registration extends Component {
-  constructor(props: PropsType) {
-    const attrs = {
-      class: 'base-container',
-    };
-
-    super('div', { ...props, attrs });
-  }
-
-  componentDidMount() {
-    const form = this.getContent().querySelector('form');
-    if (form) {
-      getFormData(form);
-    }
-  }
-
-  render() {
-    return this.compile(template, this.props);
-  }
-}
-
-const registration = new Registration({
+const initialProps = {
   title: new Title({ text: 'Регистрация' }),
   formContainer: new FormContainer({
     formElements: [
@@ -115,12 +95,33 @@ const registration = new Registration({
         attrs: { type: 'submit' },
       }),
       new Button({
-        tag: 'a',
         text: 'Войти',
-        attrs: { href: '/authorization.html', class: 'button--secondary' },
+        attrs: { class: 'button--secondary' },
+        onClick: goTo(Url.Index),
       }),
     ],
   }),
-});
+};
 
-render('.main', registration);
+class SignUpPage extends Component {
+  constructor(props: PropsType) {
+    const attrs = {
+      class: 'base-container',
+    };
+
+    super('div', { ...props, ...initialProps, attrs });
+  }
+
+  componentDidMount() {
+    const form = this.getContent().querySelector('form');
+    if (form) {
+      getFormData(form);
+    }
+  }
+
+  render() {
+    return this.compile(template, this.props);
+  }
+}
+
+export default SignUpPage;

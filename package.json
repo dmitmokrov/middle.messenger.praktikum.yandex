@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build && node ./server.js",
-    "dev": "parcel src/pages/*.html",
+    "dev": "parcel src/index.html",
     "build": "parcel build src/pages/*.html --no-source-maps",
     "prebuild": "rimraf dist",
     "eslint": "eslint . --fix --ext .js,.ts",

@@ -16,6 +16,7 @@
     "@typescript-eslint/no-unsafe-assignment": "error",
     "no-use-before-define": "warn",
     "react/prop-types": "off",
-    "prettier/prettier": ["error", {"tabWidth": 2}]
+    "prettier/prettier": ["error", {"tabWidth": 2}],
+    "no-constructor-return": "off"
   }
 }

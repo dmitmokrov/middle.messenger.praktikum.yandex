@@ -1,4 +1,3 @@
-import { render } from '../../utils/render';
 import Component, { PropsType } from '../../base/Component';
 import { template } from './template';
 import Title from '../title';
@@ -7,22 +6,10 @@ import FormField from '../form-field';
 import Input from '../input';
 import Avatar from '../avatar';
 import FormContainer from '../form-container';
+import { goTo } from '../../base/Router';
+import { Url } from '../../utils/Url';
 
-class Settings extends Component {
-  constructor(props: PropsType) {
-    const attrs = {
-      class: 'base-container',
-    };
-
-    super('div', { ...props, attrs });
-  }
-
-  render() {
-    return this.compile(template, this.props);
-  }
-}
-
-const settings = new Settings({
+const initialProps = {
   title: new Title({ text: 'Профиль' }),
   formContainer: new FormContainer({
     formElements: [
@@ -100,14 +87,12 @@ const settings = new Settings({
         }),
       }),
       new Button({
-        tag: 'a',
         text: 'Изменить данные',
-        attrs: { href: '/profile-change.html' },
+        onClick: goTo(Url.ProfileChange),
       }),
       new Button({
-        tag: 'a',
         text: 'Изменить пароль',
-        attrs: { href: '/password-change.html' },
+        onClick: goTo(Url.PasswordChange),
       }),
       new Button({
         text: 'Выйти',
@@ -115,6 +100,20 @@ const settings = new Settings({
       }),
     ],
   }),
-});
+};
 
-render('.main', settings);
+class SettingsPage extends Component {
+  constructor(props: PropsType) {
+    const attrs = {
+      class: 'base-container',
+    };
+
+    super('div', { ...props, ...initialProps, attrs });
+  }
+
+  render() {
+    return this.compile(template, this.props);
+  }
+}
+
+export default SettingsPage;

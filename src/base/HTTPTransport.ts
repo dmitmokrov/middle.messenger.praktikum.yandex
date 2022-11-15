@@ -8,13 +8,13 @@ enum METHOD {
 type OptionsType = {
   method: METHOD;
   headers?: Record<string, string>;
-  data?: Record<string, unknown>;
+  data?: Record<string, unknown> | File;
   timeout?: number;
 };
 
 type HTTPMethod = (
   url: string,
-  options: Omit<OptionsType, 'method'>
+  options?: Omit<OptionsType, 'method'>
 ) => Promise<XMLHttpRequest>;
 
 const queryStringify = (data: Record<string, unknown>): string => {

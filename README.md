@@ -2,6 +2,8 @@
 
 Социальная сеть для общения
 
+Тестовый пользователь dmokrov:qwery123Q
+
 ### Используемые технологии
 
 - Макеты в [Figma](https://www.figma.com/file/9lsCxUGY06Z0iNEbm0MKSo/Messenger)

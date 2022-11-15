@@ -119,6 +119,7 @@ const setError = (node: HTMLSpanElement, error: string) => {
 
 export const onSubmit = (event: Event) => {
   event.preventDefault();
+  let hasErrors = false;
   const form = event.target as HTMLFormElement;
   const formData = new FormData(form);
   [...formData].forEach(([inputName, value]) => {
@@ -127,6 +128,9 @@ export const onSubmit = (event: Event) => {
         `[name="${inputName}"]`
       ) as HTMLInputElement;
       const error = validate(inputName, value);
+      if (error) {
+        hasErrors = true;
+      }
       const errorField = target.nextElementSibling as HTMLSpanElement;
       if (errorField) {
         setError(errorField, error);
@@ -134,6 +138,10 @@ export const onSubmit = (event: Event) => {
       setInputValidity(target, !error);
     }
   });
+
+  return hasErrors
+    ? Promise.reject()
+    : Promise.resolve(Object.fromEntries(formData));
 };
 
 export const onBlur = (event: Event) => {

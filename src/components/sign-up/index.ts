@@ -8,6 +8,8 @@ import FormContainer from '../form-container';
 import { getFormData } from '../../utils/getFormData';
 import { goTo } from '../../base/Router';
 import { Url } from '../../utils/Url';
+import { onSubmit } from '../../utils/validate';
+import authAPI from '../../api/auth-api';
 
 const initialProps = {
   title: new Title({ text: 'Регистрация' }),
@@ -100,6 +102,9 @@ const initialProps = {
         onClick: goTo(Url.Index),
       }),
     ],
+    onSubmit: (event: Event) => {
+      onSubmit(event).then((user) => authAPI.signUp(user));
+    },
   }),
 };
 

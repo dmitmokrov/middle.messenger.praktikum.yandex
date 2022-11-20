@@ -3,7 +3,7 @@ import HTTPTransport from '../base/HTTPTransport';
 
 const userAPIInstance = new HTTPTransport();
 
-type ProfileType = {
+export type ProfileType = {
   first_name: string;
   second_name: string;
   display_name: string;
@@ -12,7 +12,7 @@ type ProfileType = {
   phone: string;
 };
 
-type PasswordsType = {
+export type PasswordsType = {
   oldPassword: string;
   newPassword: string;
 };
@@ -21,13 +21,13 @@ class UserAPI extends BaseAPI {
   async updateProfile(profile: ProfileType) {
     const url = getUrl('user/profile');
     const result = await userAPIInstance.put(url, {
-      data: profile,
+      data: JSON.stringify(profile),
       headers: ContentTypeHeader,
     });
     return result;
   }
 
-  async updateAvatar(avatar: File) {
+  async updateAvatar(avatar: FormData) {
     const url = getUrl('user/profile/avatar');
     const result = await userAPIInstance.put(url, {
       data: avatar,
@@ -38,7 +38,7 @@ class UserAPI extends BaseAPI {
   async updatePassword(passwords: PasswordsType) {
     const url = getUrl('user/password');
     const result = await userAPIInstance.put(url, {
-      data: passwords,
+      data: JSON.stringify(passwords),
       headers: ContentTypeHeader,
     });
     return result;

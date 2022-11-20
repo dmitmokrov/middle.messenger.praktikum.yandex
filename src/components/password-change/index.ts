@@ -6,6 +6,7 @@ import FormField from '../form-field';
 import Input from '../input';
 import FormContainer from '../form-container';
 import { getFormData } from '../../utils/getFormData';
+import userController from '../../controllers/user-controller';
 
 const initialProps = {
   title: new Title({ text: 'Изменение пароля' }),
@@ -37,21 +38,9 @@ const initialProps = {
           },
         }),
       }),
-      new FormField({
-        id: 'newPasswordRepeat',
-        label: 'Повторить новый пароль',
-        input: new Input({
-          attrs: {
-            label: 'Повторить новый пароль',
-            id: 'newPasswordRepeat',
-            name: 'newPasswordRepeat',
-            type: 'password',
-            placeholder: 'New_secret_word',
-          },
-        }),
-      }),
       new Button({ text: 'Сохранить', attrs: { type: 'submit' } }),
     ],
+    onSubmit: userController.updatePassword,
   }),
 };
 

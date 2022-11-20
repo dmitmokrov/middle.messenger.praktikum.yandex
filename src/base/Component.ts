@@ -65,6 +65,8 @@ abstract class Component {
   compile(template: string, props: PropsType): DocumentFragment {
     const propsAndStubs = { ...props };
 
+    Object.assign(this.children, this.#getChildren(props).children);
+
     Object.entries(this.children).forEach(([key, child]) => {
       if (Array.isArray(child)) {
         propsAndStubs[key] = child.map(
@@ -142,6 +144,13 @@ abstract class Component {
 
   #render(): void {
     const component = this.render();
+
+    if (this.props.attrs) {
+      Object.entries(this.props.attrs).forEach(([attr, value]) => {
+        this.#element.setAttribute(attr, value);
+      });
+    }
+
     this.#removeEvents();
     this.#element.innerHTML = '';
     this.#element.append(component);

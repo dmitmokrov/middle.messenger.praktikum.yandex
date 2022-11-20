@@ -8,12 +8,49 @@ import Avatar from '../avatar';
 import FormContainer from '../form-container';
 import { goTo } from '../../base/Router';
 import { Url } from '../../utils/Url';
+import authController from '../../controllers/auth-controller';
+import { connect } from '../../store/store';
+import { getResource } from '../../base/BaseAPI';
+import FormAvatar from '../form-avatar';
+import userController from '../../controllers/user-controller';
 
-const initialProps = {
-  title: new Title({ text: 'Профиль' }),
+class SettingsPage extends Component {
+  constructor(props: PropsType) {
+    const attrs = {
+      class: 'base-container',
+    };
+
+    const initialProps = {
+      title: new Title({ text: 'Профиль' }),
+    };
+
+    super('div', { ...initialProps, ...props, attrs });
+  }
+
+  render() {
+    return this.compile(template, this.props);
+  }
+}
+
+const withUser = connect((state) => ({
+  avatar: new FormAvatar({
+    id: 'avatar',
+    label: 'Изменить аватар',
+    name: 'avatar',
+    avatar: new Avatar({
+      avatarSrc: state?.user?.avatar ? getResource(state.user.avatar) : 'https://www.fillmurray.com/300/600',
+    }),
+    submitButton: new Button({
+      text: 'Сохранить аватар',
+      attrs: {
+        class: 'form-avatar__button',
+        type: 'submit',
+      },
+    }),
+    onSubmit: userController.updateAvatar,
+  }),
   formContainer: new FormContainer({
     formElements: [
-      new Avatar({}),
       new FormField({
         id: 'first_name',
         label: 'Имя',
@@ -21,7 +58,7 @@ const initialProps = {
           attrs: {
             id: 'first_name',
             name: 'first_name',
-            placeholder: 'Александр',
+            placeholder: state?.user?.first_name,
             disabled: 'disabled',
           },
         }),
@@ -33,7 +70,7 @@ const initialProps = {
           attrs: {
             id: 'second_name',
             name: 'second_name',
-            placeholder: 'Невский',
+            placeholder: state?.user?.second_name,
             disabled: 'disabled',
           },
         }),
@@ -45,7 +82,7 @@ const initialProps = {
           attrs: {
             id: 'login',
             name: 'login',
-            placeholder: 'Cool_man',
+            placeholder: state?.user?.login,
             disabled: 'disabled',
           },
         }),
@@ -57,7 +94,9 @@ const initialProps = {
           attrs: {
             id: 'display_name',
             name: 'display_name',
-            placeholder: 'Cool_man',
+            placeholder:
+              state?.user?.display_name ||
+              `${state?.user?.first_name} ${state?.user?.second_name}`,
             disabled: 'disabled',
           },
         }),
@@ -69,7 +108,7 @@ const initialProps = {
           attrs: {
             id: 'email',
             name: 'email',
-            placeholder: 'cool_man@mail.ru',
+            placeholder: state?.user?.email,
             disabled: 'disabled',
           },
         }),
@@ -81,7 +120,7 @@ const initialProps = {
           attrs: {
             id: 'phone',
             name: 'phone',
-            placeholder: '8(123)456-78-90',
+            placeholder: state?.user?.phone,
             disabled: 'disabled',
           },
         }),
@@ -96,24 +135,11 @@ const initialProps = {
       }),
       new Button({
         text: 'Выйти',
-        attrs: { class: 'button--secondary' },
+        attrs: { class: 'button--secondary', type: 'submit' },
       }),
     ],
+    onSubmit: authController.logout,
   }),
-};
+}));
 
-class SettingsPage extends Component {
-  constructor(props: PropsType) {
-    const attrs = {
-      class: 'base-container',
-    };
-
-    super('div', { ...props, ...initialProps, attrs });
-  }
-
-  render() {
-    return this.compile(template, this.props);
-  }
-}
-
-export default SettingsPage;
+export default withUser(SettingsPage);

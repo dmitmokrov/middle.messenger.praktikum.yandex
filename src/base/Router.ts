@@ -1,5 +1,7 @@
 import Route from './Route';
 import Component from './Component';
+import { Url } from '../utils/Url';
+import store from '../store/store';
 
 class Router {
   routes: Route[];
@@ -34,7 +36,8 @@ class Router {
 
   start(): void {
     window.onpopstate = (event: Event) => {
-      this.#onRoute(event.currentTarget.location.pathname);
+      const currentTarget = event.currentTarget as Window;
+      this.#onRoute(currentTarget.location.pathname);
     };
 
     this.#onRoute(window.location.pathname);
@@ -61,6 +64,19 @@ class Router {
     const route = this.getRoute(pathname);
 
     if (!route) {
+      this.go(Url.NotFound);
+      return;
+    }
+
+    const { isAuth } = store.getState();
+
+    if (
+      !isAuth &&
+      pathname !== Url.Index &&
+      pathname !== Url.SignUp &&
+      pathname !== Url.NotFound
+    ) {
+      this.go(Url.Index);
       return;
     }
 

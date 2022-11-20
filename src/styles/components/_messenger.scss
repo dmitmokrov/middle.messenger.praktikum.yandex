@@ -16,6 +16,15 @@
   border-bottom: 1px solid $primary;
 }
 
+.messenger__add-chat {
+  padding-top: 20px;
+}
+
+.messenger__add-chat-button {
+  max-width: 80%;
+  margin: 0 auto;
+}
+
 .messenger__chats {
   margin: 0;
   padding: 0;

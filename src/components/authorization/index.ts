@@ -8,6 +8,8 @@ import FormContainer from '../form-container';
 import { getFormData } from '../../utils/getFormData';
 import { goTo } from '../../base/Router';
 import { Url } from '../../utils/Url';
+import authController from '../../controllers/auth-controller';
+import store, { StoreEvent } from '../../store/store';
 
 const initialProps = {
   title: new Title({ text: 'Авторизация' }),
@@ -46,6 +48,7 @@ const initialProps = {
       }),
     ],
   }),
+  onSubmit: authController.signIn,
 };
 class AuthorizationPage extends Component {
   constructor(props: PropsType) {
@@ -54,6 +57,9 @@ class AuthorizationPage extends Component {
     };
 
     super('div', { ...props, ...initialProps, attrs });
+    store.on(StoreEvent.UPDATED, () => {
+      console.log('Init store');
+    });
   }
 
   componentDidMount() {

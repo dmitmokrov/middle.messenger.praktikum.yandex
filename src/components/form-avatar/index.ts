@@ -1,13 +1,13 @@
 import { template } from './template';
-import Component from '../../base/Component';
+import Component, { PropsType } from '../../base/Component';
 
 class FormAvatar extends Component {
-  constructor(props) {
+  constructor(props: PropsType) {
     const attrs = {
       class: 'form-avatar',
     };
 
-    super('div', { ...props, attrs });
+    super('form', { ...props, attrs });
   }
 
   render() {

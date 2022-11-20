@@ -18,7 +18,7 @@ class ChatAPI extends BaseAPI {
   async createChat(title: string) {
     const url = getUrl('chats');
     const result = await chatAPIInstance.post(url, {
-      data: { title },
+      data: JSON.stringify({ title }),
       headers: ContentTypeHeader,
     });
     return result;
@@ -27,7 +27,7 @@ class ChatAPI extends BaseAPI {
   async deleteChat(chatId: number) {
     const url = getUrl('chats');
     const result = await chatAPIInstance.delete(url, {
-      data: { chatId },
+      data: JSON.stringify({ chatId }),
       headers: ContentTypeHeader,
     });
     return result;
@@ -36,7 +36,7 @@ class ChatAPI extends BaseAPI {
   async addChatUsers(chatUsers: ChatUsersType) {
     const url = getUrl('chats/users');
     const result = await chatAPIInstance.put(url, {
-      data: chatUsers,
+      data: JSON.stringify(chatUsers),
       headers: ContentTypeHeader,
     });
     return result;
@@ -45,11 +45,13 @@ class ChatAPI extends BaseAPI {
   async deleteChatUser(chatUsers: ChatUsersType) {
     const url = getUrl('chats/users');
     const result = await chatAPIInstance.delete(url, {
-      data: chatUsers,
+      data: JSON.stringify(chatUsers),
       headers: ContentTypeHeader,
     });
     return result;
   }
 }
 
-export default ChatAPI;
+const chatAPI = new ChatAPI();
+
+export default chatAPI;

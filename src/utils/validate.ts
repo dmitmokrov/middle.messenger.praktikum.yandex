@@ -4,10 +4,8 @@ const INPUT_NAME = {
   LOGIN: 'login',
   EMAIL: 'email',
   PASSWORD: 'password',
-  PASSWORD_REPEAT: 'password-repeat',
   OLD_PASSWORD: 'oldPassword',
   NEW_PASSWORD: 'newPassword',
-  NEW_PASSWORD_REPEAT: 'newPasswordRepeat',
   PHONE: 'phone',
   MESSAGE: 'message',
 };
@@ -57,10 +55,8 @@ const validate = (inputName: string, value: string): string => {
 
       break;
     case INPUT_NAME.PASSWORD:
-    case INPUT_NAME.PASSWORD_REPEAT:
     case INPUT_NAME.OLD_PASSWORD:
     case INPUT_NAME.NEW_PASSWORD:
-    case INPUT_NAME.NEW_PASSWORD_REPEAT:
       if (!isValueLengthValid(value, 8, 40)) {
         error = 'Пароль должен содержать не менее 8 и не более 40 символов';
         break;
@@ -117,7 +113,7 @@ const setError = (node: HTMLSpanElement, error: string) => {
   }
 };
 
-export const onSubmit = (event: Event) => {
+export const validateForm = (event: Event) => {
   event.preventDefault();
   let hasErrors = false;
   const form = event.target as HTMLFormElement;

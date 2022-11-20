@@ -8,8 +8,8 @@ import FormContainer from '../form-container';
 import { getFormData } from '../../utils/getFormData';
 import { goTo } from '../../base/Router';
 import { Url } from '../../utils/Url';
-import { onSubmit } from '../../utils/validate';
-import authAPI from '../../api/auth-api';
+import authController from '../../controllers/auth-controller';
+import store, { StoreEvent } from '../../store/store';
 
 const initialProps = {
   title: new Title({ text: 'Регистрация' }),
@@ -81,17 +81,6 @@ const initialProps = {
           },
         }),
       }),
-      new FormField({
-        id: 'password-repeat',
-        label: 'Пароль еще раз',
-        input: new Input({
-          attrs: {
-            id: 'password-repeat',
-            name: 'password-repeat',
-            placeholder: 'Secret_word',
-          },
-        }),
-      }),
       new Button({
         text: 'Зарегистрироваться',
         attrs: { type: 'submit' },
@@ -102,9 +91,7 @@ const initialProps = {
         onClick: goTo(Url.Index),
       }),
     ],
-    onSubmit: (event: Event) => {
-      onSubmit(event).then((user) => authAPI.signUp(user));
-    },
+    onSubmit: authController.signUp,
   }),
 };
 
@@ -115,6 +102,9 @@ class SignUpPage extends Component {
     };
 
     super('div', { ...props, ...initialProps, attrs });
+    store.on(StoreEvent.UPDATED, () => {
+      console.log('Init store');
+    });
   }
 
   componentDidMount() {

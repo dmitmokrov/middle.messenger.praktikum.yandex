@@ -8,7 +8,7 @@ enum METHOD {
 type OptionsType = {
   method: METHOD;
   headers?: Record<string, string>;
-  data?: Record<string, unknown> | File;
+  data?: Record<string, unknown> | FormData;
   timeout?: number;
 };
 
@@ -57,12 +57,17 @@ class HTTPTransport {
       const xhr = new XMLHttpRequest();
       xhr.open(method, url);
       xhr.timeout = timeout;
+      xhr.withCredentials = true;
 
       Object.entries(headers).forEach(([key, value]) => {
         xhr.setRequestHeader(key, value);
       });
 
       xhr.onload = function () {
+        if (xhr.status >= 400) {
+          reject(Error('Ошибка запроса'));
+        }
+
         resolve(xhr);
       };
 
@@ -73,7 +78,7 @@ class HTTPTransport {
       if (method === METHOD.GET) {
         xhr.send();
       } else {
-        xhr.send(JSON.stringify(data));
+        xhr.send(data);
       }
     });
   }

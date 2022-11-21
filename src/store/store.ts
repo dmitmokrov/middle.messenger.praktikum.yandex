@@ -6,9 +6,25 @@ export enum StoreEvent {
   UPDATED = 'UPDATED',
 }
 
-export type StateType = Record<string, unknown>;
+export type StateType = {
+  isAuth: boolean;
+  user: {
+    first_name: string;
+    second_name: string;
+    display_name: string;
+    login: string;
+    email: string;
+    phone: string;
+    avatar: string | null;
+    id: number | null;
+  };
+  chats: Object[];
+  chatMessages: Object[];
+  socket: WebSocket | null;
+  [k: string]: unknown;
+};
 
-const initialState = {
+const initialState: StateType = {
   isAuth: false,
   user: {
     first_name: '',
@@ -17,8 +33,12 @@ const initialState = {
     login: '',
     email: '',
     phone: '',
+    avatar: null,
+    id: null,
   },
   chats: [],
+  chatMessages: [],
+  socket: null,
 };
 
 class Store extends EventBus {
@@ -26,6 +46,8 @@ class Store extends EventBus {
     isAuth: !!localStorage.getItem('isAuth'),
     user: JSON.parse(localStorage.getItem('user')),
     chats: JSON.parse(localStorage.getItem('chats')) || [],
+    chatMessages: [],
+    socket: null,
   };
 
   getState() {
@@ -46,12 +68,11 @@ const store = new Store();
 export default store;
 
 export const connect =
-  (mapStateToProps: (state: StateType) => StateType) =>
+  (mapStateToProps: (state: StateType) => Partial<StateType>) =>
   (ComponentClass: typeof Component) =>
     class extends ComponentClass {
       constructor(props: PropsType) {
         let state = mapStateToProps(store.getState());
-
         super({ ...props, ...state });
         store.on(StoreEvent.UPDATED, () => {
           const newState = mapStateToProps(store.getState());
@@ -69,7 +90,7 @@ type Indexed<T = any> = {
 };
 
 function merge(lhs: Indexed, rhs: Indexed): Indexed {
-  for (let p in rhs) {
+  for (const p in rhs) {
     if (!rhs.hasOwnProperty(p)) {
       continue;
     }

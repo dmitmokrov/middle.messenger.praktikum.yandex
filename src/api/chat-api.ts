@@ -50,6 +50,12 @@ class ChatAPI extends BaseAPI {
     });
     return result;
   }
+
+  async getChatToken(chatId: number) {
+    const url = getUrl(`chats/token/${chatId}`);
+    const result = await chatAPIInstance.post(url);
+    return result;
+  }
 }
 
 const chatAPI = new ChatAPI();

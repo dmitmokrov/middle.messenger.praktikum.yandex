@@ -34,20 +34,6 @@ class MessengerPage extends Component {
       messengerSettingsLink: new MessengerSettingsLink({
         onClick: goTo(Url.Settings),
       }),
-      myMessage: new Message({
-        text: `Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА
-        в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну.
-        Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря,
-        все тушки этих камер все еще находятся на поверхности Луны, так как астронавты
-        с собой забрали только кассеты с пленкой.`,
-        attrs: { class: 'messenger__dialog-message' },
-      }),
-      opponentMessage: new Message({
-        text: `Хассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету
-        они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно
-        продали на аукционе за 45000 евро.`,
-        attrs: { class: 'message--opponent messenger__dialog-message' },
-      }),
       messengerForm: new MessengerForm({
         messageInput: new Input({
           attrs: {
@@ -55,7 +41,9 @@ class MessengerPage extends Component {
             name: 'message',
             placeholder: 'Сообщение...',
           },
+          onBlur: () => {},
         }),
+        onSubmit: chatController.sendMessage,
       }),
     };
 
@@ -76,7 +64,9 @@ class MessengerPage extends Component {
 
 const withUser = connect((state) => ({
   avatar: new Avatar({
-    avatarSrc: state?.user?.avatar ? getResource(state.user.avatar) : 'https://www.fillmurray.com/300/600',
+    avatarSrc: state?.user?.avatar
+      ? getResource(state.user.avatar)
+      : 'https://www.fillmurray.com/300/600',
     attrs: { class: 'messenger__dialog-avatar' },
   }),
   userName: state?.user?.first_name,
@@ -90,25 +80,42 @@ const withUser = connect((state) => ({
         deleteChatButton: new Button({
           text: 'Удалить чат',
           attrs: { class: 'chat-card__button' },
-          onClick: () => {
+          onClick: (event: Event) => {
+            event.stopPropagation();
             chatController.deleteChat(chat.id);
           },
         }),
         addUserButton: new Button({
           text: 'Добавить участников',
           attrs: { class: 'chat-card__button' },
-          onClick: () => {
+          onClick: (event: Event) => {
+            event.stopPropagation();
             chatController.addChatUsers(chat.id);
           },
         }),
         deleteUserButton: new Button({
           text: 'Удалить участников',
           attrs: { class: 'chat-card__button' },
-          onClick: () => {
+          onClick: (event: Event) => {
+            event.stopPropagation();
             chatController.deleteChatUser(chat.id);
           },
         }),
         chatInfo: chat,
+        onClick: () => {
+          chatController.connectToChat(chat.id);
+        },
+      })
+  ),
+  chatMessages: state.chatMessages.map(
+    (message) =>
+      new Message({
+        text: message.content,
+        attrs: {
+          class: `${
+            message.user_id !== state.user.id ? 'message--opponent' : ''
+          } messenger__dialog-message`,
+        },
       })
   ),
 }));

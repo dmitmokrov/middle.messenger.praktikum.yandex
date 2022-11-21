@@ -8,7 +8,7 @@ enum METHOD {
 type OptionsType = {
   method: METHOD;
   headers?: Record<string, string>;
-  data?: Record<string, unknown> | FormData;
+  data?: Record<string, unknown> | FormData | JSON;
   timeout?: number;
 };
 

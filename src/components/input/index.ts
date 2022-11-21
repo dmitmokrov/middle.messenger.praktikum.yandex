@@ -10,7 +10,7 @@ class Input extends Component {
       ...props?.attrs,
     };
 
-    super('input', { ...props, attrs, onBlur });
+    super('input', { onBlur, ...props, attrs });
   }
 
   render() {

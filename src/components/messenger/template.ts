@@ -19,8 +19,9 @@ export const template = `
       {{{ messengerSettingsLink }}}
     </div>
     <div class="messenger__dialog-body">
-      {{{ myMessage }}}
-      {{{ opponentMessage }}}
+      {{#each chatMessages}}
+        {{{ this }}}
+      {{/each}}
     </div>
     <div class="messenger__dialog-form-container">
       {{{ messengerForm }}}

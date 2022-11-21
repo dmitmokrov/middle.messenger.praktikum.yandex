@@ -41,6 +41,8 @@
 }
 
 .chat-card__button {
+  max-width: 300px;
+
   & + & {
     margin-top: 10px;
   }

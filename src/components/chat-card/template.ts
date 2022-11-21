@@ -2,7 +2,7 @@ export const template = `
   {{{ avatar }}}
   <div>
     <h3 class="chat-card__title">{{ chatInfo.title }}</h3>
-    <p class="chat-card__info">Вы: {{ chatInfo.last_message }}</p>
+    <p class="chat-card__info">{{ chatInfo.last_message.user.display_name }}: {{ chatInfo.last_message.content }}</p>
     {{{ deleteChatButton }}}
     {{{ addUserButton }}}
     {{{ deleteUserButton }}}

@@ -38,7 +38,9 @@ const withUser = connect((state) => ({
     label: 'Изменить аватар',
     name: 'avatar',
     avatar: new Avatar({
-      avatarSrc: state?.user?.avatar ? getResource(state.user.avatar) : 'https://www.fillmurray.com/300/600',
+      avatarSrc: state?.user?.avatar
+        ? getResource(state.user.avatar)
+        : 'https://www.fillmurray.com/300/600',
     }),
     submitButton: new Button({
       text: 'Сохранить аватар',

@@ -22,42 +22,55 @@ class ChatController {
   }
 
   async createChat() {
-    const chatName = prompt('Введите название чата') || 'Новый чат';
-    await chatAPI.createChat(chatName);
-    await this.getChats();
+    try {
+      const chatName = prompt('Введите название чата') || 'Новый чат';
+      await chatAPI.createChat(chatName);
+      await this.getChats();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async deleteChat(chatId: number) {
-    await chatAPI.deleteChat(chatId);
-    await this.getChats();
+    try {
+      await chatAPI.deleteChat(chatId);
+      await this.getChats();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async addChatUsers(chatId: number) {
-    const users = prompt('Введите id участников через запятую без пробелов')
-      ?.split(',')
-      .map(Number);
+    try {
+      const users = prompt('Введите id участников через запятую без пробелов')
+        ?.split(',')
+        .map(Number);
 
-    const chatUsers = {
-      users,
-      chatId,
-    };
-
-    await chatAPI.addChatUsers(chatUsers);
-    // await this.getChats();
+      const chatUsers = {
+        users,
+        chatId,
+      };
+      await chatAPI.addChatUsers(chatUsers);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async deleteChatUser(chatId: number) {
-    const users = prompt('Введите id участников через запятую без пробелов')
-      ?.split(',')
-      .map(Number);
+    try {
+      const users = prompt('Введите id участников через запятую без пробелов')
+        ?.split(',')
+        .map(Number);
 
-    const chatUsers = {
-      users,
-      chatId,
-    };
+      const chatUsers = {
+        users,
+        chatId,
+      };
 
-    await chatAPI.deleteChatUser(chatUsers);
-    // await this.getChats();
+      await chatAPI.deleteChatUser(chatUsers);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async connectToChat(chatId: number) {

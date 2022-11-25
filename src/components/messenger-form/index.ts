@@ -1,10 +1,9 @@
 import { template } from './template';
 import Component, { PropsType } from '../../base/Component';
-import { onSubmit } from '../../utils/validate';
 
 class MessengerForm extends Component {
   constructor(props: PropsType) {
-    super('form', { ...props, onSubmit });
+    super('form', { ...props });
   }
 
   render() {

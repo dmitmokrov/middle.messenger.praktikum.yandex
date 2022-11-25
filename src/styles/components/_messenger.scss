@@ -2,10 +2,14 @@
   display: grid;
   grid-template-columns: 500px 1fr;
   width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .messenger__aside {
   background-color: rgba($primary, 0.2);
+  height: 100%;
+  overflow: auto;
 }
 
 .messenger__search {
@@ -16,6 +20,15 @@
   border-bottom: 1px solid $primary;
 }
 
+.messenger__add-chat {
+  padding-top: 20px;
+}
+
+.messenger__add-chat-button {
+  max-width: 80%;
+  margin: 0 auto;
+}
+
 .messenger__chats {
   margin: 0;
   padding: 0;
@@ -24,10 +37,12 @@
 
 .messenger__dialog {
   position: relative;
+  height: 100%;
   padding-top: 0;
   padding-bottom: 20px;
   padding-left: 20px;
   padding-right: 20px;
+  overflow: hidden;
 }
 
 .messenger__dialog-header {
@@ -64,7 +79,12 @@
 }
 
 .messenger__dialog-body {
-  padding-top: 94px;
+  display: flex;
+  flex-direction: column-reverse;
+  height: calc(100% - 159px);
+  margin-top: 94px;
+  margin-bottom: 65px;
+  overflow: auto;
 }
 
 .messenger__dialog-message {

@@ -9,8 +9,7 @@ class ChatCard extends Component {
   }
 
   render() {
-    const { avatar } = this.props;
-    return this.compile(template, { avatar });
+    return this.compile(template, this.props);
   }
 }
 

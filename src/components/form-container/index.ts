@@ -1,6 +1,5 @@
 import { template } from './template';
 import Component, { PropsType } from '../../base/Component';
-import { onSubmit } from '../../utils/validate';
 
 class FormContainer extends Component {
   constructor(props: PropsType) {
@@ -8,7 +7,7 @@ class FormContainer extends Component {
       class: 'form-container',
     };
 
-    super('form', { ...props, attrs, onSubmit });
+    super('form', { ...props, attrs });
   }
 
   render() {

@@ -1,14 +1,13 @@
 import { template } from './template';
 import Component, { PropsType } from '../../base/Component';
 
-class Avatar extends Component {
+class MessengerSettingsLink extends Component {
   constructor(props: PropsType) {
     const attrs = {
-      ...props?.attrs,
-      class: `avatar ${props?.attrs?.class}`,
+      class: `messenger__dialog-button`,
     };
 
-    super('div', { ...props, attrs });
+    super('a', { ...props, attrs });
   }
 
   render() {
@@ -16,4 +15,4 @@ class Avatar extends Component {
   }
 }
 
-export default Avatar;
+export default MessengerSettingsLink;

@@ -1,4 +1,3 @@
-import { render } from '../../utils/render';
 import Component, { PropsType } from '../../base/Component';
 import { template } from './template';
 import Title from '../title';
@@ -7,29 +6,12 @@ import FormField from '../form-field';
 import Input from '../input';
 import FormContainer from '../form-container';
 import { getFormData } from '../../utils/getFormData';
+import { goTo } from '../../base/Router';
+import { Url } from '../../utils/Url';
+import authController from '../../controllers/auth-controller';
+import store, { StoreEvent } from '../../store/store';
 
-class Authorization extends Component {
-  constructor(props: PropsType) {
-    const attrs = {
-      class: 'base-container',
-    };
-
-    super('div', { ...props, attrs });
-  }
-
-  componentDidMount() {
-    const form = this.getContent().querySelector('form');
-    if (form) {
-      getFormData(form);
-    }
-  }
-
-  render() {
-    return this.compile(template, this.props);
-  }
-}
-
-const authorization = new Authorization({
+const initialProps = {
   title: new Title({ text: 'Авторизация' }),
   formContainer: new FormContainer({
     formElements: [
@@ -60,12 +42,36 @@ const authorization = new Authorization({
       }),
       new Button({ text: 'Войти', attrs: { type: 'submit' } }),
       new Button({
-        tag: 'a',
         text: 'Зарегистрироваться',
-        attrs: { href: '/registration.html', class: 'button--secondary' },
+        attrs: { class: 'button--secondary' },
+        onClick: goTo(Url.SignUp),
       }),
     ],
   }),
-});
+  onSubmit: authController.signIn,
+};
+class AuthorizationPage extends Component {
+  constructor(props: PropsType) {
+    const attrs = {
+      class: 'base-container',
+    };
 
-render('.main', authorization);
+    super('div', { ...props, ...initialProps, attrs });
+    store.on(StoreEvent.UPDATED, () => {
+      console.log('Init store');
+    });
+  }
+
+  componentDidMount() {
+    const form = this.getContent().querySelector('form');
+    if (form) {
+      getFormData(form);
+    }
+  }
+
+  render() {
+    return this.compile(template, this.props);
+  }
+}
+
+export default AuthorizationPage;

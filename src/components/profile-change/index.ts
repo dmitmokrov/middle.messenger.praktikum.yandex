@@ -1,22 +1,25 @@
-import { render } from '../../utils/render';
 import Component, { PropsType } from '../../base/Component';
 import { template } from './template';
 import Title from '../title';
-import FormAvatar from '../form-avatar';
 import Button from '../button';
 import FormField from '../form-field';
 import Input from '../input';
-import Avatar from '../avatar';
 import FormContainer from '../form-container';
 import { getFormData } from '../../utils/getFormData';
+import userController from '../../controllers/user-controller';
+import { connect } from '../../store/store';
 
-class ProfileChange extends Component {
+class ProfileChangePage extends Component {
   constructor(props: PropsType) {
     const attrs = {
       class: 'base-container',
     };
 
-    super('div', { ...props, attrs });
+    const initialProps = {
+      title: new Title({ text: 'Изменение данных' }),
+    };
+
+    super('div', { ...initialProps, ...props, attrs });
   }
 
   componentDidMount() {
@@ -31,16 +34,9 @@ class ProfileChange extends Component {
   }
 }
 
-const profileChange = new ProfileChange({
-  title: new Title({ text: 'Изменение данных' }),
+const withUser = connect((state) => ({
   formContainer: new FormContainer({
     formElements: [
-      new FormAvatar({
-        id: 'avatar',
-        label: 'Изменить аватар',
-        name: 'avatar',
-        avatar: new Avatar({}),
-      }),
       new FormField({
         id: 'first_name',
         label: 'Имя',
@@ -49,6 +45,7 @@ const profileChange = new ProfileChange({
             id: 'first_name',
             name: 'first_name',
             placeholder: 'Александр',
+            value: state.user.first_name,
           },
         }),
       }),
@@ -60,6 +57,7 @@ const profileChange = new ProfileChange({
             id: 'second_name',
             name: 'second_name',
             placeholder: 'Невский',
+            value: state.user.second_name,
           },
         }),
       }),
@@ -71,6 +69,7 @@ const profileChange = new ProfileChange({
             id: 'login',
             name: 'login',
             placeholder: 'Cool_man',
+            value: state.user.login,
           },
         }),
       }),
@@ -82,6 +81,9 @@ const profileChange = new ProfileChange({
             id: 'display_name',
             name: 'display_name',
             placeholder: 'Cool_man',
+            value:
+              state.user.display_name ||
+              `${state.user.first_name} ${state.user.second_name}`,
           },
         }),
       }),
@@ -93,6 +95,7 @@ const profileChange = new ProfileChange({
             id: 'email',
             name: 'email',
             placeholder: 'cool_man@mail.ru',
+            value: state.user.email,
           },
         }),
       }),
@@ -104,12 +107,14 @@ const profileChange = new ProfileChange({
             id: 'phone',
             name: 'phone',
             placeholder: '8(123)456-78-90',
+            value: state.user.phone,
           },
         }),
       }),
       new Button({ text: 'Сохранить', attrs: { type: 'submit' } }),
     ],
+    onSubmit: userController.updateProfile,
   }),
-});
+}));
 
-render('.main', profileChange);
+export default withUser(ProfileChangePage);

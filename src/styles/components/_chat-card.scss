@@ -39,3 +39,11 @@
   color: $white;
   background-color: $primary;
 }
+
+.chat-card__button {
+  max-width: 300px;
+
+  & + & {
+    margin-top: 10px;
+  }
+}

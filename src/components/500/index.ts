@@ -1,10 +1,24 @@
-import { render } from '../../utils/render';
 import Component, { PropsType } from '../../base/Component';
 import { template } from './template';
 import Title from '../title';
 import Button from '../button';
 // @ts-ignore
 import imgSrc from '../../../static/icons/server.svg';
+import { goTo } from '../../base/Router';
+import { Url } from '../../utils/Url';
+
+const initialProps = {
+  imgSrc: imgSrc as string,
+  title: new Title({
+    text: 'Сервер устал и прилег:( Но мы его скоро разбудим',
+    attrs: { class: 'title--secondary' },
+  }),
+  button: new Button({
+    text: 'Вернуться к чатам',
+    attrs: { class: 'button--secondary' },
+    onCLick: goTo(Url.Messenger),
+  }),
+};
 
 class Page500 extends Component {
   constructor(props: PropsType) {
@@ -12,7 +26,7 @@ class Page500 extends Component {
       class: 'centered-container',
     };
 
-    super('div', { ...props, attrs });
+    super('div', { ...props, ...initialProps, attrs });
   }
 
   render() {
@@ -20,18 +34,4 @@ class Page500 extends Component {
   }
 }
 
-const page500 = new Page500({
-  imgSrc: imgSrc as string,
-  title: new Title({
-    text: 'Сервер устал и прилег:( Но мы его скоро разбудим',
-    attrs: { class: 'title--secondary' },
-  }),
-  button: new Button({
-    tag: 'a',
-    href: '/',
-    text: 'Вернуться к чатам',
-    attrs: { href: '/', class: 'button--secondary' },
-  }),
-});
-
-render('.main', page500);
+export default Page500;

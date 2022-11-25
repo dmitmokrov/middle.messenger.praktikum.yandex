@@ -7,6 +7,8 @@ export const template = `
       id={{ id }}
       name={{ name }}
       type="file"
+      accept="image/*"
     >
   </label>
+  {{{ submitButton }}}
 `;

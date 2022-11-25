@@ -1,4 +1,3 @@
-import { render } from '../../utils/render';
 import Component, { PropsType } from '../../base/Component';
 import { template } from './template';
 import Title from '../title';
@@ -7,14 +6,25 @@ import FormField from '../form-field';
 import Input from '../input';
 import Avatar from '../avatar';
 import FormContainer from '../form-container';
+import { goTo } from '../../base/Router';
+import { Url } from '../../utils/Url';
+import authController from '../../controllers/auth-controller';
+import { connect } from '../../store/store';
+import { getResource } from '../../base/BaseAPI';
+import FormAvatar from '../form-avatar';
+import userController from '../../controllers/user-controller';
 
-class Settings extends Component {
+class SettingsPage extends Component {
   constructor(props: PropsType) {
     const attrs = {
       class: 'base-container',
     };
 
-    super('div', { ...props, attrs });
+    const initialProps = {
+      title: new Title({ text: 'Профиль' }),
+    };
+
+    super('div', { ...initialProps, ...props, attrs });
   }
 
   render() {
@@ -22,11 +32,27 @@ class Settings extends Component {
   }
 }
 
-const settings = new Settings({
-  title: new Title({ text: 'Профиль' }),
+const withUser = connect((state) => ({
+  avatar: new FormAvatar({
+    id: 'avatar',
+    label: 'Изменить аватар',
+    name: 'avatar',
+    avatar: new Avatar({
+      avatarSrc: state?.user?.avatar
+        ? getResource(state.user.avatar)
+        : 'https://www.fillmurray.com/300/600',
+    }),
+    submitButton: new Button({
+      text: 'Сохранить аватар',
+      attrs: {
+        class: 'form-avatar__button',
+        type: 'submit',
+      },
+    }),
+    onSubmit: userController.updateAvatar,
+  }),
   formContainer: new FormContainer({
     formElements: [
-      new Avatar({}),
       new FormField({
         id: 'first_name',
         label: 'Имя',
@@ -34,7 +60,7 @@ const settings = new Settings({
           attrs: {
             id: 'first_name',
             name: 'first_name',
-            placeholder: 'Александр',
+            placeholder: state?.user?.first_name,
             disabled: 'disabled',
           },
         }),
@@ -46,7 +72,7 @@ const settings = new Settings({
           attrs: {
             id: 'second_name',
             name: 'second_name',
-            placeholder: 'Невский',
+            placeholder: state?.user?.second_name,
             disabled: 'disabled',
           },
         }),
@@ -58,7 +84,7 @@ const settings = new Settings({
           attrs: {
             id: 'login',
             name: 'login',
-            placeholder: 'Cool_man',
+            placeholder: state?.user?.login,
             disabled: 'disabled',
           },
         }),
@@ -70,7 +96,9 @@ const settings = new Settings({
           attrs: {
             id: 'display_name',
             name: 'display_name',
-            placeholder: 'Cool_man',
+            placeholder:
+              state?.user?.display_name ||
+              `${state?.user?.first_name} ${state?.user?.second_name}`,
             disabled: 'disabled',
           },
         }),
@@ -82,7 +110,7 @@ const settings = new Settings({
           attrs: {
             id: 'email',
             name: 'email',
-            placeholder: 'cool_man@mail.ru',
+            placeholder: state?.user?.email,
             disabled: 'disabled',
           },
         }),
@@ -94,27 +122,26 @@ const settings = new Settings({
           attrs: {
             id: 'phone',
             name: 'phone',
-            placeholder: '8(123)456-78-90',
+            placeholder: state?.user?.phone,
             disabled: 'disabled',
           },
         }),
       }),
       new Button({
-        tag: 'a',
         text: 'Изменить данные',
-        attrs: { href: '/profile-change.html' },
+        onClick: goTo(Url.ProfileChange),
       }),
       new Button({
-        tag: 'a',
         text: 'Изменить пароль',
-        attrs: { href: '/password-change.html' },
+        onClick: goTo(Url.PasswordChange),
       }),
       new Button({
         text: 'Выйти',
-        attrs: { class: 'button--secondary' },
+        attrs: { class: 'button--secondary', type: 'submit' },
       }),
     ],
+    onSubmit: authController.logout,
   }),
-});
+}));
 
-render('.main', settings);
+export default withUser(SettingsPage);

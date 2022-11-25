@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build && node ./server.js",
-    "dev": "parcel src/pages/*.html",
-    "build": "parcel build src/pages/*.html --no-source-maps",
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html --no-source-maps",
     "prebuild": "rimraf dist",
     "eslint": "eslint . --fix --ext .js,.ts",
     "stylelint": "stylelint \"**/*.scss\" --fix"
@@ -28,10 +28,12 @@
     "@types/uuid": "8.3.4",
     "@typescript-eslint/eslint-plugin": "5.41.0",
     "@typescript-eslint/parser": "5.41.0",
+    "chai": "4.3.7",
     "eslint": "8.26.0",
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
+    "mocha": "10.1.0",
     "parcel": "2.7.0",
     "prettier": "2.7.1",
     "stylelint": "14.14.0",

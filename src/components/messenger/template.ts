@@ -3,21 +3,25 @@ export const template = `
     <div class="messenger__search">
       {{{ search }}}
     </div>
+    <div class="messenger__add-chat">{{{ addChatButton }}}</div>
     <ul class="messenger__chats">
-      <li>{{{ chatCard }}}</li>
+      {{#each chats}}
+        <li>
+          {{{ this }}}
+        </li>
+      {{/each}}
     </ul>
   </div>
   <div class="messenger__dialog">
     <div class="messenger__dialog-header">
       {{{ avatar }}}
-      <span class="messenger__dialog-name">Дмитрий</span>
-      <a class="messenger__dialog-button" href="/settings.html">
-        <span class="visually-hidden">Открыть настройки</span>
-      </a>
+      <span class="messenger__dialog-name">{{ userName }}</span>
+      {{{ messengerSettingsLink }}}
     </div>
     <div class="messenger__dialog-body">
-      {{{ myMessage }}}
-      {{{ opponentMessage }}}
+      {{#each chatMessages}}
+        {{{ this }}}
+      {{/each}}
     </div>
     <div class="messenger__dialog-form-container">
       {{{ messengerForm }}}

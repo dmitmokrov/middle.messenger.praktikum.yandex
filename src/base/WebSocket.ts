@@ -18,17 +18,18 @@ export const createWS = (parameters: WSParametersType): WebSocket => {
     console.log(`Код: ${event.code} | Причина: ${event.reason}`);
   });
 
-  socket.addEventListener('message', (event) => {
-    const message = JSON.parse(event.data);
+  socket.addEventListener('message', (event: MessageEvent) => {
+    const message = JSON.parse(event.data) as WebSocketEventMap['message'];
     const adapterMessage = Array.isArray(message) ? message : [message];
     const usersMessage = adapterMessage.filter(
       (message) => message.type === 'message'
     );
     const currentMessages = store.getState().chatMessages;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     store.setState('chatMessages', [...usersMessage, ...currentMessages]);
   });
 
-  socket.addEventListener('error', (event) => {
+  socket.addEventListener('error', (event: ErrorEvent) => {
     console.log('Ошибка', event.message);
   });
 

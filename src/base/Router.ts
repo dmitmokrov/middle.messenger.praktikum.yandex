@@ -16,6 +16,7 @@ class Router {
 
   constructor(rootQuery: string) {
     if (Router.#instance) {
+      // eslint-disable-next-line no-constructor-return
       return Router.#instance;
     }
 

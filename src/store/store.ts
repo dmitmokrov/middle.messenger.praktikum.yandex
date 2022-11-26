@@ -1,4 +1,6 @@
-import Component, { PropsType } from '../base/Component';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+// eslint-disable-next-line max-classes-per-file
+import { PropsType } from '../base/Component';
 import EventBus from '../base/EventBus';
 import { isEqual } from '../utils/isEqual';
 
@@ -44,8 +46,8 @@ const initialState: StateType = {
 class Store extends EventBus {
   #state: StateType = {
     isAuth: !!localStorage.getItem('isAuth'),
-    user: JSON.parse(localStorage.getItem('user')),
-    chats: JSON.parse(localStorage.getItem('chats')) || [],
+    user: JSON.parse(localStorage.getItem('user') as string),
+    chats: JSON.parse(localStorage.getItem('chats') as string) || [],
     chatMessages: [],
     socket: null,
   };
@@ -67,9 +69,11 @@ class Store extends EventBus {
 const store = new Store();
 export default store;
 
+type ComponentType<T = any> = new (...args: any[]) => T;
+
 export const connect =
   (mapStateToProps: (state: StateType) => Partial<StateType>) =>
-  (ComponentClass: typeof Component) =>
+  (ComponentClass: ComponentType) =>
     class extends ComponentClass {
       constructor(props: PropsType) {
         let state = mapStateToProps(store.getState());
@@ -90,8 +94,11 @@ type Indexed<T = any> = {
 };
 
 function merge(lhs: Indexed, rhs: Indexed): Indexed {
+  // eslint-disable-next-line no-restricted-syntax
   for (const p in rhs) {
+    // eslint-disable-next-line no-prototype-builtins
     if (!rhs.hasOwnProperty(p)) {
+      // eslint-disable-next-line no-continue
       continue;
     }
 

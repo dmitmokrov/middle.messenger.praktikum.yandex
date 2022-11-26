@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import authAPI, { UserType, UserSecretsType } from '../api/auth-api';
 import router from '../base/Router';
 import store from '../store/store';

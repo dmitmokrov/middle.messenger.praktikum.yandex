@@ -5,16 +5,24 @@ type PropsType = {
   rootQuery: string;
 };
 
+type InstantiableComponent<T extends Component> = {
+  new (...args: any[]): T;
+};
+
 class Route {
   #pathname: string;
 
-  #componentClass: typeof Component;
+  #componentClass: InstantiableComponent<Component>;
 
   #component: Component | null;
 
   #props: PropsType;
 
-  constructor(pathname: string, view: typeof Component, props: PropsType) {
+  constructor(
+    pathname: string,
+    view: InstantiableComponent<any>,
+    props: PropsType
+  ) {
     this.#pathname = pathname;
     this.#componentClass = view;
     this.#component = null;

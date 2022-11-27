@@ -3,7 +3,7 @@ import { template } from './template';
 import Title from '../title';
 import Button from '../button';
 // @ts-ignore
-import imgSrc from '../../../static/icons/404.svg';
+import * as imgSrc from '../../../static/icons/404.svg';
 import { goTo } from '../../base/Router';
 import { Url } from '../../utils/Url';
 

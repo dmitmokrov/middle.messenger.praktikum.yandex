@@ -1,26 +1,22 @@
 import { render } from '../utils/render';
-import Component from './Component';
+import Component, { PropsType as ComponentPropsType } from './Component';
 
 type PropsType = {
   rootQuery: string;
 };
 
-type InstantiableComponent<T extends Component> = {
-  new (...args: any[]): T;
-};
-
-class Route {
+class Route<T extends Component> {
   #pathname: string;
 
-  #componentClass: InstantiableComponent<Component>;
+  #componentClass: new (props: ComponentPropsType) => T;
 
-  #component: Component | null;
+  #component: T | null;
 
   #props: PropsType;
 
   constructor(
     pathname: string,
-    view: InstantiableComponent<any>,
+    view: new (props: ComponentPropsType) => T,
     props: PropsType
   ) {
     this.#pathname = pathname;
@@ -48,7 +44,7 @@ class Route {
 
   render(): void {
     if (!this.#component) {
-      this.#component = new this.#componentClass();
+      this.#component = new this.#componentClass({});
       render(this.#props.rootQuery, this.#component);
       return;
     }

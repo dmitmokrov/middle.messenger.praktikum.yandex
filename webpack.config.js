@@ -7,6 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'messenger.bundle.js',
+    clean: true,
   },
   resolve: {
     extensions: ['.ts', '.js', '.json'],
@@ -31,12 +32,16 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.svg$/,
-        loader: 'svg-inline-loader',
-      },
-      {
         test: /\.s[ac]ss$/i,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
       },
     ],
   },
@@ -48,5 +53,6 @@ module.exports = {
     port: 4000,
     open: true,
     hot: true,
+    historyApiFallback: true,
   },
 };

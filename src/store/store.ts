@@ -1,12 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line max-classes-per-file
-import { PropsType } from '../base/Component';
+import Component, { PropsType } from '../base/Component';
 import EventBus from '../base/EventBus';
 import { isEqual } from '../utils/isEqual';
 
 export enum StoreEvent {
   UPDATED = 'UPDATED',
 }
+
+type ChatType = {
+  avatar: string;
+  id: number;
+};
+
+type MessageType = {
+  content: string;
+  user_id: number;
+};
 
 export type StateType = {
   isAuth: boolean;
@@ -20,8 +30,8 @@ export type StateType = {
     avatar: string | null;
     id: number | null;
   };
-  chats: Object[];
-  chatMessages: Object[];
+  chats: ChatType[];
+  chatMessages: MessageType[];
   socket: WebSocket | null;
   [k: string]: unknown;
 };
@@ -69,11 +79,12 @@ class Store extends EventBus {
 const store = new Store();
 export default store;
 
-type ComponentType<T = any> = new (...args: any[]) => T;
-
 export const connect =
-  (mapStateToProps: (state: StateType) => Partial<StateType>) =>
-  (ComponentClass: ComponentType) =>
+  <T extends Component>(
+    mapStateToProps: (state: StateType) => Partial<StateType>
+  ) =>
+  (ComponentClass: new (props: PropsType) => T) =>
+    // @ts-ignore
     class extends ComponentClass {
       constructor(props: PropsType) {
         let state = mapStateToProps(store.getState());

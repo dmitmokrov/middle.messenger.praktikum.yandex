@@ -5,10 +5,12 @@ enum METHOD {
   DELETE = 'DELETE',
 }
 
+type DataType = Document | XMLHttpRequestBodyInit;
+
 type OptionsType = {
   method: METHOD;
   headers?: Record<string, string>;
-  data?: Record<string, unknown> | FormData | JSON;
+  data?: DataType;
   timeout?: number;
 };
 
@@ -17,7 +19,7 @@ type HTTPMethod = (
   options?: Omit<OptionsType, 'method'>
 ) => Promise<XMLHttpRequest>;
 
-const queryStringify = (data: Record<string, unknown>): string => {
+const queryStringify = (data: DataType): string => {
   const str = Object.entries(data)
     .map(([key, value]) => `${key}=${value}`)
     .join('&');

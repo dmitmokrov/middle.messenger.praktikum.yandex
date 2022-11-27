@@ -5,15 +5,13 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run build && node ./server.js",
-    "start:test": "npm run build:test && node ./server.js",
-    "dev": "parcel src/index.html",
-    "dev:test": "webpack serve --mode development",
-    "build:test": "webpack --mode production",
-    "build": "parcel build src/index.html --no-source-maps",
+    "start": "npm run build:test && node ./server.js",
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production",
     "prebuild": "rimraf dist",
     "eslint": "eslint . --fix --ext .js,.ts",
-    "stylelint": "stylelint \"**/*.scss\" --fix"
+    "stylelint": "stylelint \"**/*.scss\" --fix",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -38,6 +36,7 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.2.1",
     "html-webpack-plugin": "5.5.0",
+    "husky": "8.0.0",
     "mini-css-extract-plugin": "2.7.0",
     "mocha": "10.1.0",
     "parcel": "2.7.0",

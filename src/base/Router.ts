@@ -3,7 +3,7 @@ import Component, { PropsType } from './Component';
 import { Url } from '../utils/Url';
 import store from '../store/store';
 
-class Router<T extends Component> {
+export class Router<T extends Component> {
   routes: Route<T>[];
 
   history: History;

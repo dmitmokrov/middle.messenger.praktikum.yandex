@@ -21,3 +21,4 @@
 - `npm run build` - сборка production версии
 - `npm run eslint` - линтер js(ts)
 - `npm run stylelint` - линтер scss
+- `npm test` - запуск тестов

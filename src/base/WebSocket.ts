@@ -19,14 +19,18 @@ export const createWS = (parameters: WSParametersType): WebSocket => {
   });
 
   socket.addEventListener('message', (event: MessageEvent) => {
-    const message = JSON.parse(event.data) as WebSocketEventMap['message'];
-    const adapterMessage = Array.isArray(message) ? message : [message];
-    const usersMessage = adapterMessage.filter(
-      (message) => message.type === 'message'
-    );
-    const currentMessages = store.getState().chatMessages;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    store.setState('chatMessages', [...usersMessage, ...currentMessages]);
+    try {
+      const message = JSON.parse(event.data) as WebSocketEventMap['message'];
+      const adapterMessage = Array.isArray(message) ? message : [message];
+      const usersMessage = adapterMessage.filter(
+        (message) => message.type === 'message'
+      );
+      const currentMessages = store.getState().chatMessages;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      store.setState('chatMessages', [...usersMessage, ...currentMessages]);
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   socket.addEventListener('error', (event: ErrorEvent) => {

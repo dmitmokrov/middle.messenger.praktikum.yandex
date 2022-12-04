@@ -71,6 +71,11 @@ export class Router<T extends Component> {
 
     const { isAuth } = store.getState();
 
+    if (isAuth && (pathname === Url.Index || pathname === Url.SignUp)) {
+      this.go(Url.Messenger);
+      return;
+    }
+
     if (
       !isAuth &&
       pathname !== Url.Index &&

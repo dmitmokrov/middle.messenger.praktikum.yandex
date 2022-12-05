@@ -9,9 +9,10 @@
 ### Используемые технологии
 
 - Макеты в [Figma](https://www.figma.com/file/9lsCxUGY06Z0iNEbm0MKSo/Messenger)
-- Проект опубликован на [Netlify](https://bejewelled-palmier-1dc6f4.netlify.app/)
+- Проект опубликован на [Netlify](https://bejewelled-palmier-1dc6f4.netlify.app/) (статические файлы)
+- Проект опубликован на [Heroku](https://dmokrov-messenger.herokuapp.com/) (docker)
 - В проекте используется шаблонизатор [Handlebars](https://handlebarsjs.com/)
-- Основные технологии: TypeScript, SCSS, WebSocket
+- Основные технологии: TypeScript, SCSS, WebSocket, Webpack, Docker
 
 ### Команды:
 
@@ -20,3 +21,4 @@
 - `npm run build` - сборка production версии
 - `npm run eslint` - линтер js(ts)
 - `npm run stylelint` - линтер scss
+- `npm test` - запуск тестов

@@ -8,6 +8,7 @@ import PasswordChangePage from './components/password-change';
 import ProfileChangePage from './components/profile-change';
 import Page404 from './components/404';
 import Page500 from './components/500';
+import './styles/style.scss';
 
 router
   .use(Url.Index, AuthorizationPage)

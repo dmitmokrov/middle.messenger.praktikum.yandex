@@ -1,21 +1,22 @@
 import Route from './Route';
-import Component from './Component';
+import Component, { PropsType } from './Component';
 import { Url } from '../utils/Url';
 import store from '../store/store';
 
-class Router {
-  routes: Route[];
+export class Router<T extends Component> {
+  routes: Route<T>[];
 
   history: History;
 
-  #currentRoute: Route | null;
+  #currentRoute: Route<T> | null;
 
   #rootQuery: string;
 
-  static #instance: Router;
+  static #instance: Router<any>;
 
   constructor(rootQuery: string) {
     if (Router.#instance) {
+      // eslint-disable-next-line no-constructor-return
       return Router.#instance;
     }
 
@@ -26,7 +27,7 @@ class Router {
     Router.#instance = this;
   }
 
-  use(pathname: string, component: typeof Component): Router {
+  use(pathname: string, component: new (props: PropsType) => T): Router<T> {
     const route = new Route(pathname, component, {
       rootQuery: this.#rootQuery,
     });
@@ -56,7 +57,7 @@ class Router {
     this.history.forward();
   }
 
-  getRoute(pathname: string): Route | undefined {
+  getRoute(pathname: string): Route<T> | undefined {
     return this.routes.find((route) => route.match(pathname));
   }
 
@@ -69,6 +70,11 @@ class Router {
     }
 
     const { isAuth } = store.getState();
+
+    if (isAuth && (pathname === Url.Index || pathname === Url.SignUp)) {
+      this.go(Url.Messenger);
+      return;
+    }
 
     if (
       !isAuth &&

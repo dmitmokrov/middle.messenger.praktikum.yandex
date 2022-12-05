@@ -70,12 +70,13 @@ const withUser = connect((state) => ({
     attrs: { class: 'messenger__dialog-avatar' },
   }),
   userName: state?.user?.first_name,
+  // @ts-ignore
   chats: state?.chats.map(
     (chat) =>
       new ChatCard({
         avatar: new Avatar({
           attrs: { class: 'chat-card__avatar' },
-          avatarSrc: chat.avatar || 'https://www.fillmurray.com/300/600',
+          avatarSrc: chat?.avatar || 'https://www.fillmurray.com/300/600',
         }),
         deleteChatButton: new Button({
           text: 'Удалить чат',
@@ -107,6 +108,7 @@ const withUser = connect((state) => ({
         },
       })
   ),
+  // @ts-ignore
   chatMessages: state.chatMessages.map(
     (message) =>
       new Message({

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import authAPI, { UserType, UserSecretsType } from '../api/auth-api';
 import router from '../base/Router';
 import store from '../store/store';
@@ -10,6 +11,7 @@ class AuthController {
     this.signUp = this.signUp.bind(this);
     this.signIn = this.signIn.bind(this);
     this.getUserInfo = this.getUserInfo.bind(this);
+    this.autoLogin = this.autoLogin.bind(this);
     this.logout = this.logout.bind(this);
   }
 
@@ -54,7 +56,24 @@ class AuthController {
         store.setState('user', response);
         localStorage.setItem('user', JSON.stringify(response));
       })
-      .catch(console.log);
+      .catch((e) => {
+        throw Error(e);
+      });
+  }
+
+  async autoLogin() {
+    await this.getUserInfo()
+      .then(async () => {
+        await chatController.getChats();
+      })
+      .then(() => {
+        store.setState('isAuth', true);
+        localStorage.setItem('isAuth', '1');
+        router.go(Url.Messenger);
+      })
+      .catch(() => {
+        throw new Error('Пользователь не авторизован');
+      });
   }
 
   async logout(event: Event) {

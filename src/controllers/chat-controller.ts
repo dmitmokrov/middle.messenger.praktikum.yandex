@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import chatAPI from '../api/chat-api';
 import store from '../store/store';
 import { createWS } from '../base/WebSocket';
@@ -44,7 +45,7 @@ class ChatController {
     try {
       const users = prompt('Введите id участников через запятую без пробелов')
         ?.split(',')
-        .map(Number);
+        .map(Number) as number[];
 
       const chatUsers = {
         users,
@@ -60,7 +61,7 @@ class ChatController {
     try {
       const users = prompt('Введите id участников через запятую без пробелов')
         ?.split(',')
-        .map(Number);
+        .map(Number) as number[];
 
       const chatUsers = {
         users,
@@ -80,9 +81,9 @@ class ChatController {
       .then((data) => JSON.parse(data.response))
       .then((response) => {
         const parameters = {
-          userId: store.getState().user.id,
+          userId: store.getState().user.id as number,
           chatId,
-          token: response.token,
+          token: response.token as number,
         };
 
         createWS(parameters);
@@ -94,7 +95,7 @@ class ChatController {
     const form = event.target as HTMLFormElement;
     validateForm(event)
       .then((formData) => {
-        store.getState()?.socket.send(
+        store.getState()?.socket?.send(
           JSON.stringify({
             content: formData.message,
             type: 'message',

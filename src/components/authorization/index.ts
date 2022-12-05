@@ -67,6 +67,12 @@ class AuthorizationPage extends Component {
     if (form) {
       getFormData(form);
     }
+
+    try {
+      authController.autoLogin();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   render() {
